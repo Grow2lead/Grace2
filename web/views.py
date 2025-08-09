@@ -14,6 +14,8 @@ import json
 from datetime import datetime, date
 from nutrition.models import Food, MealLog
 from activity.models import ActivityLog
+from providers.models import Provider, ProviderService
+from search.services import ProviderSearchService
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -110,6 +112,51 @@ class ActivityView(LoginRequiredMixin, TemplateView):
         context.update({
             'activities': activities,
             'selected_date': selected_date,
+        })
+        return context
+
+
+class MealsProviderView(LoginRequiredMixin, TemplateView):
+    template_name = 'web/meals_provider.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get search parameters
+        search_query = self.request.GET.get('search', '')
+        category = self.request.GET.get('category', '')
+        district = self.request.GET.get('district', '')
+        
+        # Initialize search service
+        search_service = ProviderSearchService()
+        
+        # Search for providers with nutrition-related services
+        nutrition_categories = ['nutritionist', 'millet_food']
+        providers = search_service.search_providers(
+            query=search_query,
+            category=category if category else nutrition_categories,
+            district=district,
+            min_rating=0,
+            max_distance=50  # 50km radius
+        )
+        
+        # Get unique categories for filter - focusing on nutrition-related ones
+        nutrition_categories_display = [
+            ('nutritionist', 'Nutritionist'),
+            ('millet_food', 'Healthy Food Shops'), 
+            ('ayurveda', 'Ayurvedic Centers'),
+        ]
+        
+        # Get unique districts
+        districts = Provider.objects.values_list('district', flat=True).distinct().order_by('district')
+        
+        context.update({
+            'providers': providers,
+            'search_query': search_query,
+            'selected_category': category,
+            'selected_district': district,
+            'categories': nutrition_categories_display,
+            'districts': districts,
         })
         return context
 

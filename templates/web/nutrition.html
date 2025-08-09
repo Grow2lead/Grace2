@@ -3,170 +3,393 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nutrition - Health App</title>
+  <title>Nutrition - Grace Wellness</title>
   <style>
+    :root {
+      --primary-color: #059669;
+      --primary-dark: #047857;
+      --secondary-color: #0ea5e9;
+      --accent-color: #f59e0b;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --error-color: #ef4444;
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f9fafb;
+      --bg-accent: #ecfdf5;
+      --border-color: #e5e7eb;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; 
-      background: #f8fafc; 
-      color: #1e293b;
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
     }
+
+    /* Header */
+    .header {
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
     .navbar {
-      background: #0ea5e9; 
-      color: #fff; 
-      padding: 16px 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .navbar-content {
-      max-width: 1200px; 
-      margin: 0 auto; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center;
-    }
-    .nav-links a {
-      color: #fff; 
-      text-decoration: none; 
-      margin-left: 24px;
-      padding: 8px 16px;
-      border-radius: 6px;
-      transition: background 0.2s;
-    }
-    .nav-links a:hover { background: rgba(255,255,255,0.2); }
-    .container { 
-      max-width: 1200px; 
-      margin: 0 auto; 
-      padding: 24px 20px; 
-    }
-    .header-section {
-      background: #fff;
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      height: 4rem;
     }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .brand-icon {
+      font-size: 1.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+      background: var(--bg-accent);
+    }
+
+    .nav-links a.active {
+      color: var(--primary-color);
+      background: var(--bg-accent);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    /* Page Header */
+    .page-header {
+      background: var(--bg-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .page-header h1 {
+      color: var(--primary-color);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
     .date-picker {
-      padding: 8px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
       font-size: 1rem;
     }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-secondary {
+      background: var(--text-secondary);
+    }
+
+    .btn-secondary:hover {
+      background: #4b5563;
+    }
+
+    /* Stats Grid */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
+
     .stat-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      background: var(--bg-primary);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
       text-align: center;
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
     }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
     .stat-number {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #0ea5e9;
-      margin-bottom: 4px;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
     }
+
     .stat-label {
-      color: #64748b;
-      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 500;
     }
+
+    /* Meals Section */
     .meals-section {
-      background: #fff;
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      background: var(--bg-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
     }
+
+    .section-title {
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
     .meal-group {
-      margin-bottom: 24px;
+      margin-bottom: 2rem;
     }
+
+    .meal-group:last-child {
+      margin-bottom: 0;
+    }
+
     .meal-group h3 {
-      color: #374151;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #e5e7eb;
+      color: var(--primary-color);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--bg-accent);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
+
     .meal-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid #f3f4f6;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border-color);
+      transition: all 0.2s ease;
     }
-    .meal-item:last-child { border-bottom: none; }
+
+    .meal-item:hover {
+      background: var(--bg-accent);
+      margin: 0 -1rem;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      border-bottom: 1px solid transparent;
+    }
+
+    .meal-item:last-child {
+      border-bottom: none;
+    }
+
     .meal-info {
       flex: 1;
     }
+
     .meal-name {
-      font-weight: 500;
-      color: #111827;
-    }
-    .meal-details {
-      color: #6b7280;
-      font-size: 0.9rem;
-      margin-top: 2px;
-    }
-    .meal-calories {
       font-weight: 600;
-      color: #0ea5e9;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
     }
+
+    .meal-details {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .meal-calories {
+      font-weight: 700;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+
     .empty-state {
       text-align: center;
-      color: #64748b;
-      padding: 40px 20px;
+      padding: 3rem 2rem;
+      color: var(--text-secondary);
     }
-    .btn {
-      display: inline-block;
-      padding: 10px 16px;
-      background: #0ea5e9;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: 500;
-      transition: all 0.2s;
-      border: none;
-      cursor: pointer;
+
+    .empty-state h3 {
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
     }
-    .btn:hover {
-      background: #0284c7;
-      transform: translateY(-1px);
+
+    .empty-state p {
+      margin-bottom: 1.5rem;
     }
-    .btn-secondary {
-      background: #6b7280;
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--bg-primary);
+        border-top: 1px solid var(--border-color);
+        flex-direction: column;
+        padding: 1rem;
+        gap: 0;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links a {
+        width: 100%;
+        text-align: left;
+        padding: 0.75rem 1rem;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .page-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .container {
+        padding: 1rem;
+      }
     }
-    .btn-secondary:hover { background: #4b5563; }
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="navbar-content">
-      <h1>Nutrition</h1>
-      <div class="nav-links">
+  <header class="header">
+    <nav class="navbar">
+      <a href="{% url 'dashboard' %}" class="brand">
+        <div class="brand-icon">🌿</div>
+        <span>Grace Wellness</span>
+      </a>
+      <div class="nav-links" id="navLinks">
         <a href="{% url 'dashboard' %}">Dashboard</a>
-        <a href="{% url 'nutrition' %}">Nutrition</a>
+        <a href="{% url 'nutrition' %}" class="active">Nutrition</a>
         <a href="{% url 'activity' %}">Activity</a>
+        <a href="{% url 'meals_provider' %}">Meals Provider</a>
         <a href="/admin/" target="_blank">Admin</a>
-        <a href="/admin/logout/">Logout</a>
+        <a href="/admin/logout/" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">Logout</a>
       </div>
-    </div>
-  </nav>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    </nav>
+  </header>
 
-  <div class="container">
-    <div class="header-section">
+  <main class="container">
+    <div class="page-header">
       <div>
-        <h2>Nutrition Tracker</h2>
-        <p>Track your daily meals and nutrition</p>
+        <h1>🥗 Nutrition Tracker</h1>
+        <p>Track your daily meals and nutritional intake</p>
       </div>
-      <div>
-        <input type="date" class="date-picker" value="{{ selected_date }}" onchange="window.location.href='?date=' + this.value">
-        <a href="{% url 'log_meal' %}" class="btn" style="margin-left: 12px;">➕ Log Meal</a>
+      <div class="header-actions">
+        <input type="date" class="date-picker" value="{{ selected_date }}" 
+               onchange="window.location.href='?date=' + this.value">
+        <a href="{% url 'log_meal' %}" class="btn">
+          ➕ Log Meal
+        </a>
       </div>
     </div>
 
@@ -180,23 +403,28 @@
         <div class="stat-label">Total Calories</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number">{{ total_protein|floatformat:1 }}</div>
-        <div class="stat-label">Protein (g)</div>
+        <div class="stat-number">{{ total_protein|floatformat:1 }}g</div>
+        <div class="stat-label">Protein</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number">{{ total_carbs|floatformat:1 }}</div>
-        <div class="stat-label">Carbs (g)</div>
+        <div class="stat-number">{{ total_carbs|floatformat:1 }}g</div>
+        <div class="stat-label">Carbohydrates</div>
       </div>
     </div>
 
     <div class="meals-section">
-      <h3>Meals for {{ selected_date|date:"F j, Y" }}</h3>
+      <h2 class="section-title">
+        📅 Meals for {{ selected_date|date:"F j, Y" }}
+      </h2>
       
       {% if meals %}
         {% regroup meals by meal_type as meal_list %}
         {% for meal_type in meal_list %}
         <div class="meal-group">
-          <h3>{{ meal_type.grouper|title }}</h3>
+          <h3>
+            {% if meal_type.grouper == 'breakfast' %}🌅{% elif meal_type.grouper == 'lunch' %}🌞{% elif meal_type.grouper == 'dinner' %}🌙{% else %}🍽️{% endif %}
+            {{ meal_type.grouper|title }}
+          </h3>
           {% for meal in meal_type.list %}
           <div class="meal-item">
             <div class="meal-info">
@@ -204,7 +432,7 @@
               <div class="meal-details">
                 {{ meal.quantity }}x serving • {{ meal.food.serving_size_grams }}g
                 {% if meal.food.protein_g or meal.food.carbs_g or meal.food.fat_g %}
-                  • P: {{ meal.food.protein_g|floatformat:1 }}g, C: {{ meal.food.carbs_g|floatformat:1 }}g, F: {{ meal.food.fat_g|floatformat:1 }}g
+                  • Protein: {{ meal.food.protein_g|floatformat:1 }}g, Carbs: {{ meal.food.carbs_g|floatformat:1 }}g, Fat: {{ meal.food.fat_g|floatformat:1 }}g
                 {% endif %}
               </div>
             </div>
@@ -217,11 +445,29 @@
         {% endfor %}
       {% else %}
         <div class="empty-state">
-          <p>No meals logged for this date</p>
-          <a href="{% url 'log_meal' %}" class="btn" style="margin-top: 12px;">Log your first meal</a>
+          <h3>No meals logged yet</h3>
+          <p>Start tracking your nutrition by logging your first meal for {{ selected_date|date:"F j, Y" }}</p>
+          <a href="{% url 'log_meal' %}" class="btn">🍽️ Log your first meal</a>
         </div>
       {% endif %}
     </div>
-  </div>
+  </main>
+
+  <script>
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      navLinks.classList.toggle('active');
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const navLinks = document.getElementById('navLinks');
+      const menuBtn = document.querySelector('.mobile-menu-btn');
+      
+      if (!navLinks.contains(event.target) && !menuBtn.contains(event.target)) {
+        navLinks.classList.remove('active');
+      }
+    });
+  </script>
 </body>
 </html>
