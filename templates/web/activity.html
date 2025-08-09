@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Activity - Grace Wellness</title>
+  <title>Activity - Rootedwell</title>
   <style>
     :root {
       --primary-color: #059669;
@@ -378,13 +378,14 @@
     <nav class="navbar">
       <a href="{% url 'dashboard' %}" class="brand">
         <div class="brand-icon">🌿</div>
-        <span>Grace Wellness</span>
+        <span>Rootedwell</span>
       </a>
       <div class="nav-links" id="navLinks">
         <a href="{% url 'dashboard' %}">Dashboard</a>
         <a href="{% url 'nutrition' %}">Nutrition</a>
         <a href="{% url 'activity' %}" class="active">Activity</a>
         <a href="{% url 'meals_provider' %}">Meals Provider</a>
+        <a href="{% url 'profile' %}">Profile</a>
         <a href="/admin/" target="_blank">Admin</a>
         <a href="/admin/logout/" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">Logout</a>
       </div>

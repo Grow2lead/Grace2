@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nutrition - Rootedwell</title>
+  <title>Profile - Rootedwell</title>
   <style>
     :root {
       --primary-color: #059669;
@@ -114,11 +114,7 @@
       padding: 2rem;
       margin-bottom: 2rem;
       box-shadow: var(--shadow-sm);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+      text-align: center;
     }
 
     .page-header h1 {
@@ -131,51 +127,6 @@
     .page-header p {
       color: var(--text-secondary);
       font-size: 1.1rem;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .date-picker {
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--border-color);
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      background: var(--primary-color);
-      color: white;
-      text-decoration: none;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    .btn:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .btn-secondary {
-      background: var(--text-secondary);
-    }
-
-    .btn-secondary:hover {
-      background: #4b5563;
     }
 
     /* Stats Grid */
@@ -193,12 +144,6 @@
       box-shadow: var(--shadow-sm);
       text-align: center;
       border: 1px solid var(--border-color);
-      transition: all 0.2s ease;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
     }
 
     .stat-number {
@@ -213,100 +158,52 @@
       font-weight: 500;
     }
 
-    /* Meals Section */
-    .meals-section {
+    /* Content Grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+
+    .section-card {
       background: var(--bg-primary);
       border-radius: 1rem;
-      padding: 2rem;
+      padding: 1.5rem;
       box-shadow: var(--shadow-sm);
       border: 1px solid var(--border-color);
     }
 
     .section-title {
       color: var(--text-primary);
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .meal-group {
-      margin-bottom: 2rem;
-    }
-
-    .meal-group:last-child {
-      margin-bottom: 0;
-    }
-
-    .meal-group h3 {
-      color: var(--primary-color);
       font-size: 1.25rem;
       font-weight: 600;
       margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid var(--bg-accent);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
     }
 
-    .meal-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .item {
       padding: 1rem 0;
       border-bottom: 1px solid var(--border-color);
-      transition: all 0.2s ease;
     }
 
-    .meal-item:hover {
-      background: var(--bg-accent);
-      margin: 0 -1rem;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      border-bottom: 1px solid transparent;
-    }
-
-    .meal-item:last-child {
+    .item:last-child {
       border-bottom: none;
     }
 
-    .meal-info {
-      flex: 1;
-    }
-
-    .meal-name {
+    .item-name {
       font-weight: 600;
       color: var(--text-primary);
       margin-bottom: 0.25rem;
     }
 
-    .meal-details {
+    .item-details {
       color: var(--text-secondary);
       font-size: 0.9rem;
     }
 
-    .meal-calories {
-      font-weight: 700;
-      color: var(--primary-color);
-      font-size: 1.1rem;
-    }
-
     .empty-state {
       text-align: center;
-      padding: 3rem 2rem;
+      padding: 2rem;
       color: var(--text-secondary);
-    }
-
-    .empty-state h3 {
-      color: var(--text-primary);
-      margin-bottom: 0.5rem;
-    }
-
-    .empty-state p {
-      margin-bottom: 1.5rem;
     }
 
     /* Responsive Design */
@@ -338,19 +235,8 @@
         display: block;
       }
 
-      .page-header {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .header-actions {
-        width: 100%;
-        justify-content: center;
-      }
-
-      .stats-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
+      .content-grid {
+        grid-template-columns: 1fr;
       }
 
       .container {
@@ -368,10 +254,10 @@
       </a>
       <div class="nav-links" id="navLinks">
         <a href="{% url 'dashboard' %}">Dashboard</a>
-        <a href="{% url 'nutrition' %}" class="active">Nutrition</a>
+        <a href="{% url 'nutrition' %}">Nutrition</a>
         <a href="{% url 'activity' %}">Activity</a>
         <a href="{% url 'meals_provider' %}">Meals Provider</a>
-        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'profile' %}" class="active">Profile</a>
         <a href="/admin/" target="_blank">Admin</a>
         <a href="/admin/logout/" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">Logout</a>
       </div>
@@ -381,76 +267,106 @@
 
   <main class="container">
     <div class="page-header">
-      <div>
-        <h1>🥗 Nutrition Tracker</h1>
-        <p>Track your daily meals and nutritional intake</p>
-      </div>
-      <div class="header-actions">
-        <input type="date" class="date-picker" value="{{ selected_date }}" 
-               onchange="window.location.href='?date=' + this.value">
-        <a href="{% url 'log_meal' %}" class="btn">
-          ➕ Log Meal
-        </a>
-      </div>
+      <h1>👤 My Profile</h1>
+      <p>View your wellness journey and personal data</p>
     </div>
 
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-number">{{ meals|length }}</div>
-        <div class="stat-label">Meals Today</div>
+        <div class="stat-number">{{ total_meals_logged }}</div>
+        <div class="stat-label">Meals Logged</div>
       </div>
+      
       <div class="stat-card">
-        <div class="stat-number">{{ total_calories|floatformat:0 }}</div>
-        <div class="stat-label">Total Calories</div>
+        <div class="stat-number">{{ total_activities_logged }}</div>
+        <div class="stat-label">Activities Logged</div>
       </div>
+      
       <div class="stat-card">
-        <div class="stat-number">{{ total_protein|floatformat:1 }}g</div>
-        <div class="stat-label">Protein</div>
+        <div class="stat-number">{{ total_bookings_made }}</div>
+        <div class="stat-label">Bookings Made</div>
       </div>
+      
       <div class="stat-card">
-        <div class="stat-number">{{ total_carbs|floatformat:1 }}g</div>
-        <div class="stat-label">Carbohydrates</div>
+        <div class="stat-number">{{ search_history|length }}</div>
+        <div class="stat-label">Searches Made</div>
       </div>
     </div>
 
-    <div class="meals-section">
-      <h2 class="section-title">
-        📅 Meals for {{ selected_date|date:"F j, Y" }}
-      </h2>
-      
-      {% if meals %}
-        {% regroup meals by meal_type as meal_list %}
-        {% for meal_type in meal_list %}
-        <div class="meal-group">
-          <h3>
-            {% if meal_type.grouper == 'breakfast' %}🌅{% elif meal_type.grouper == 'lunch' %}🌞{% elif meal_type.grouper == 'dinner' %}🌙{% else %}🍽️{% endif %}
-            {{ meal_type.grouper|title }}
-          </h3>
-          {% for meal in meal_type.list %}
-          <div class="meal-item">
-            <div class="meal-info">
-              <div class="meal-name">{{ meal.food.name }}</div>
-              <div class="meal-details">
-                {{ meal.quantity }}x serving • {{ meal.food.serving_size_grams }}g
-                {% if meal.food.protein_g or meal.food.carbs_g or meal.food.fat_g %}
-                  • Protein: {{ meal.food.protein_g|floatformat:1 }}g, Carbs: {{ meal.food.carbs_g|floatformat:1 }}g, Fat: {{ meal.food.fat_g|floatformat:1 }}g
-                {% endif %}
-              </div>
-            </div>
-            <div class="meal-calories">
-              {{ meal.total_calories|floatformat:0 }} cal
-            </div>
+    <div class="content-grid">
+      <!-- User Profile Info -->
+      <div class="section-card">
+        <h3 class="section-title">📝 Profile Information</h3>
+        {% if user_profile %}
+          <div class="item">
+            <div class="item-name">Health Goals</div>
+            <div class="item-details">{{ user_profile.health_goals|join:", "|default:"Not set" }}</div>
+          </div>
+          <div class="item">
+            <div class="item-name">Dietary Restrictions</div>
+            <div class="item-details">{{ user_profile.dietary_restrictions|join:", "|default:"None" }}</div>
+          </div>
+          <div class="item">
+            <div class="item-name">Activity Level</div>
+            <div class="item-details">{{ user_profile.get_activity_level_display|default:"Not set" }}</div>
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <p>Complete your profile to get personalized recommendations</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Recent Meals -->
+      <div class="section-card">
+        <h3 class="section-title">🍽️ Recent Meals</h3>
+        {% if recent_meals %}
+          {% for meal in recent_meals %}
+          <div class="item">
+            <div class="item-name">{{ meal.food.name }}</div>
+            <div class="item-details">{{ meal.meal_type|title }} • {{ meal.logged_at|date:"M j, g:i A" }}</div>
           </div>
           {% endfor %}
-        </div>
-        {% endfor %}
-      {% else %}
-        <div class="empty-state">
-          <h3>No meals logged yet</h3>
-          <p>Start tracking your nutrition by logging your first meal for {{ selected_date|date:"F j, Y" }}</p>
-          <a href="{% url 'log_meal' %}" class="btn">🍽️ Log your first meal</a>
-        </div>
-      {% endif %}
+        {% else %}
+          <div class="empty-state">
+            <p>No meals logged yet</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Recent Activities -->
+      <div class="section-card">
+        <h3 class="section-title">🏃 Recent Activities</h3>
+        {% if recent_activities %}
+          {% for activity in recent_activities %}
+          <div class="item">
+            <div class="item-name">{{ activity.get_activity_type_display }}</div>
+            <div class="item-details">{{ activity.duration_minutes }} minutes • {{ activity.started_at|date:"M j, g:i A" }}</div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <p>No activities logged yet</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Recent Bookings -->
+      <div class="section-card">
+        <h3 class="section-title">📅 Recent Bookings</h3>
+        {% if user_bookings %}
+          {% for booking in user_bookings %}
+          <div class="item">
+            <div class="item-name">{{ booking.provider.business_name }}</div>
+            <div class="item-details">{{ booking.service.name }} • {{ booking.booking_date|date:"M j" }} at {{ booking.booking_time|time:"g:i A" }}</div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <p>No bookings made yet</p>
+          </div>
+        {% endif %}
+      </div>
     </div>
   </main>
 

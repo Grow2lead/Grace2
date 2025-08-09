@@ -12,10 +12,13 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.views.generic import FormView
 import json
 from datetime import datetime, date
-from nutrition.models import Food, MealLog
+from nutrition.models import Food, MealLog, FoodCategory, LocalFoodDatabase
 from activity.models import ActivityLog
 from providers.models import Provider, ProviderService
+from personalization.models import UserProfile, RecommendationEngine
 from search.services import ProviderSearchService
+from search.models import SearchQuery, PopularSearch
+from bookings.models import Booking, BookingAvailability
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -24,18 +27,45 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = date.today()
+        user = self.request.user
         
         # Get today's meals
         today_meals = MealLog.objects.filter(
-            user=self.request.user, 
+            user=user, 
             log_date=today
         ).select_related('food')
         
         # Get today's activities
         today_activities = ActivityLog.objects.filter(
-            user=self.request.user,
+            user=user,
             started_at__date=today
         )
+        
+        # Get user profile and recommendations
+        try:
+            user_profile = UserProfile.objects.get(user=user)
+            profile_completion = user_profile.profile_completion_percentage if hasattr(user_profile, 'profile_completion_percentage') else 0
+        except UserProfile.DoesNotExist:
+            user_profile = None
+            profile_completion = 0
+        
+        # Get user's bookings
+        user_bookings = Booking.objects.filter(user=user, booking_date__gte=today).order_by('booking_date')[:3]
+        
+        # Get recommendations
+        recommendations = RecommendationEngine.get_meal_recommendations(user) if user_profile else []
+        
+        # Get popular searches
+        popular_searches = PopularSearch.objects.all()[:5]
+        
+        # Get food categories and counts
+        food_categories = FoodCategory.objects.all()[:5]
+        total_foods = Food.objects.count()
+        sri_lankan_foods = LocalFoodDatabase.objects.count()
+        
+        # Get provider statistics
+        total_providers = Provider.objects.filter(status='approved').count()
+        available_services = ProviderService.objects.count()
         
         # Calculate totals
         total_calories = sum(meal.food.calories * meal.quantity for meal in today_meals)
@@ -51,6 +81,16 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             'total_calories': total_calories,
             'total_activity_minutes': total_activity_minutes,
             'today': today,
+            'user_profile': user_profile,
+            'profile_completion': profile_completion,
+            'user_bookings': user_bookings,
+            'recommendations': recommendations,
+            'popular_searches': popular_searches,
+            'food_categories': food_categories,
+            'total_foods': total_foods,
+            'sri_lankan_foods': sri_lankan_foods,
+            'total_providers': total_providers,
+            'available_services': available_services,
         })
         return context
 
@@ -83,11 +123,20 @@ class NutritionView(LoginRequiredMixin, TemplateView):
             total_carbs += meal.total_carbs
             total_fat += meal.total_fat
         
+        # Get food categories and Sri Lankan foods
+        food_categories = FoodCategory.objects.all()
+        sri_lankan_foods = Food.objects.filter(localfooddatabase__isnull=False).select_related('localfooddatabase')[:10]
         foods = Food.objects.all().order_by('name')[:50]  # Limit for performance
+        
+        # Get recent searches for food suggestions
+        recent_searches = SearchQuery.objects.filter(user=self.request.user).order_by('-created_at')[:5]
         
         context.update({
             'meals': meals,
             'foods': foods,
+            'food_categories': food_categories,
+            'sri_lankan_foods': sri_lankan_foods,
+            'recent_searches': recent_searches,
             'selected_date': selected_date,
             'total_calories': total_calories,
             'total_protein': total_protein,
@@ -130,21 +179,29 @@ class MealsProviderView(LoginRequiredMixin, TemplateView):
         # Initialize search service
         search_service = ProviderSearchService()
         
-        # Search for providers with nutrition-related services
-        nutrition_categories = ['nutritionist', 'millet_food']
-        providers = search_service.search_providers(
-            query=search_query,
-            category=category if category else nutrition_categories,
-            district=district,
-            min_rating=0,
-            max_distance=50  # 50km radius
-        )
+        # Get all providers for now, filter by nutrition-related if no specific search
+        if category or search_query:
+            try:
+                providers = search_service.search_providers(
+                    query=search_query,
+                    category=category,
+                    district=district,
+                    min_rating=0,
+                    max_distance=50
+                )
+            except Exception:
+                # Fallback if search service has issues
+                providers = Provider.objects.filter(status='approved').select_related('user')[:20]
+        else:
+            # Show all providers if no filters
+            providers = Provider.objects.all().select_related('user')[:20]
         
         # Get unique categories for filter - focusing on nutrition-related ones
         nutrition_categories_display = [
             ('nutritionist', 'Nutritionist'),
             ('millet_food', 'Healthy Food Shops'), 
             ('ayurveda', 'Ayurvedic Centers'),
+            ('gym', 'Fitness Centers'),
         ]
         
         # Get unique districts
@@ -157,6 +214,49 @@ class MealsProviderView(LoginRequiredMixin, TemplateView):
             'selected_district': district,
             'categories': nutrition_categories_display,
             'districts': districts,
+        })
+        return context
+
+
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'web/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        
+        # Get or create user profile
+        try:
+            user_profile = UserProfile.objects.get(user=user)
+        except UserProfile.DoesNotExist:
+            user_profile = None
+        
+        # Get user's meal history
+        recent_meals = MealLog.objects.filter(user=user).select_related('food').order_by('-logged_at')[:10]
+        
+        # Get user's activity history
+        recent_activities = ActivityLog.objects.filter(user=user).order_by('-started_at')[:10]
+        
+        # Get user's bookings
+        user_bookings = Booking.objects.filter(user=user).select_related('provider', 'service').order_by('-booking_date')[:10]
+        
+        # Get user's search history
+        search_history = SearchQuery.objects.filter(user=user).order_by('-created_at')[:10]
+        
+        # Calculate some stats
+        total_meals_logged = MealLog.objects.filter(user=user).count()
+        total_activities_logged = ActivityLog.objects.filter(user=user).count()
+        total_bookings_made = Booking.objects.filter(user=user).count()
+        
+        context.update({
+            'user_profile': user_profile,
+            'recent_meals': recent_meals,
+            'recent_activities': recent_activities,
+            'user_bookings': user_bookings,
+            'search_history': search_history,
+            'total_meals_logged': total_meals_logged,
+            'total_activities_logged': total_activities_logged,
+            'total_bookings_made': total_bookings_made,
         })
         return context
 

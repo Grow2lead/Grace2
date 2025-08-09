@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 app_name = 'providers'
@@ -22,6 +22,9 @@ urlpatterns = [
     # Media management
     path('media/upload/', views.upload_provider_media, name='upload-media'),
     path('media/<int:media_id>/delete/', views.delete_provider_media, name='delete-media'),
+    
+    # Fitness center specific endpoints
+    path('fitness/', include('providers.fitness_urls')),
     
     # Public provider detail and services
     path('<slug:slug>/', views.ProviderDetailView.as_view(), name='detail'),
