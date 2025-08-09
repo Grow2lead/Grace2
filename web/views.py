@@ -14,7 +14,7 @@ import json
 from datetime import datetime, date
 from nutrition.models import Food, MealLog, FoodCategory, LocalFoodDatabase
 from activity.models import ActivityLog
-from providers.models import Provider, ProviderService
+from providers.models import Provider, ProviderService, FitnessCenter
 from personalization.models import UserProfile, RecommendationEngine
 from search.services import ProviderSearchService
 from search.models import SearchQuery, PopularSearch
@@ -125,7 +125,7 @@ class NutritionView(LoginRequiredMixin, TemplateView):
         
         # Get food categories and Sri Lankan foods
         food_categories = FoodCategory.objects.all()
-        sri_lankan_foods = Food.objects.filter(localfooddatabase__isnull=False).select_related('localfooddatabase')[:10]
+        sri_lankan_foods = Food.objects.filter(region__icontains='Sri Lanka')[:10]
         foods = Food.objects.all().order_by('name')[:50]  # Limit for performance
         
         # Get recent searches for food suggestions
@@ -179,7 +179,9 @@ class MealsProviderView(LoginRequiredMixin, TemplateView):
         # Initialize search service
         search_service = ProviderSearchService()
         
-        # Get all providers for now, filter by nutrition-related if no specific search
+        # Get nutrition-related providers only (exclude fitness centers)
+        excluded_categories = ['gym', 'zumba', 'yoga', 'personal_trainer', 'martial_arts']
+        
         if category or search_query:
             try:
                 providers = search_service.search_providers(
@@ -188,20 +190,26 @@ class MealsProviderView(LoginRequiredMixin, TemplateView):
                     district=district,
                     min_rating=0,
                     max_distance=50
-                )
+                ).exclude(category__in=excluded_categories)
             except Exception:
                 # Fallback if search service has issues
-                providers = Provider.objects.filter(status='approved').select_related('user')[:20]
+                providers = Provider.objects.filter(
+                    status='approved'
+                ).exclude(category__in=excluded_categories).select_related('user')[:20]
         else:
-            # Show all providers if no filters
-            providers = Provider.objects.all().select_related('user')[:20]
+            # Show nutrition-related providers only
+            providers = Provider.objects.filter(
+                status='approved'
+            ).exclude(category__in=excluded_categories).select_related('user')[:20]
         
-        # Get unique categories for filter - focusing on nutrition-related ones
+        # Get unique categories for filter - focusing on nutrition-related ones only
         nutrition_categories_display = [
             ('nutritionist', 'Nutritionist'),
-            ('millet_food', 'Healthy Food Shops'), 
+            ('dietitian', 'Clinical Dietitians'),
+            ('millet_food', 'Millet & Traditional Grains'),
+            ('meal_delivery', 'Meal Delivery Services'),
+            ('healthy_food', 'Healthy Food Stores'),
             ('ayurveda', 'Ayurvedic Centers'),
-            ('gym', 'Fitness Centers'),
         ]
         
         # Get unique districts
@@ -214,6 +222,263 @@ class MealsProviderView(LoginRequiredMixin, TemplateView):
             'selected_district': district,
             'categories': nutrition_categories_display,
             'districts': districts,
+        })
+        return context
+
+
+class ChallengeHubView(LoginRequiredMixin, TemplateView):
+    template_name = 'web/challenge_hub.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Mock challenge data - in real implementation, this would come from a Challenge model
+        weekly_challenges = [
+            {
+                'id': 1,
+                'title': '7-Day Millet Challenge',
+                'description': 'Include millet-based meals in your diet for 7 consecutive days',
+                'type': 'nutrition',
+                'duration_days': 7,
+                'participants': 45,
+                'reward_points': 100,
+                'difficulty': 'Easy',
+                'status': 'active'
+            },
+            {
+                'id': 2,
+                'title': '10,000 Steps Daily',
+                'description': 'Walk at least 10,000 steps every day for a week',
+                'type': 'fitness',
+                'duration_days': 7,
+                'participants': 78,
+                'reward_points': 150,
+                'difficulty': 'Medium',
+                'status': 'active'
+            },
+            {
+                'id': 3,
+                'title': 'Mindful Eating Week',
+                'description': 'Practice mindful eating and log your meals with detailed notes',
+                'type': 'wellness',
+                'duration_days': 7,
+                'participants': 32,
+                'reward_points': 120,
+                'difficulty': 'Easy',
+                'status': 'active'
+            }
+        ]
+        
+        monthly_challenges = [
+            {
+                'id': 4,
+                'title': 'Sri Lankan Superfood Month',
+                'description': 'Explore and try 20 different traditional Sri Lankan superfoods',
+                'type': 'nutrition',
+                'duration_days': 30,
+                'participants': 156,
+                'reward_points': 500,
+                'difficulty': 'Hard',
+                'status': 'active'
+            },
+            {
+                'id': 5,
+                'title': 'Yoga Master Challenge',
+                'description': 'Complete 20 yoga sessions with local instructors',
+                'type': 'fitness',
+                'duration_days': 30,
+                'participants': 89,
+                'reward_points': 400,
+                'difficulty': 'Medium',
+                'status': 'active'
+            }
+        ]
+        
+        # User progress (mock data)
+        user_challenges = [
+            {
+                'challenge_id': 1,
+                'title': '7-Day Millet Challenge',
+                'progress_percentage': 85,
+                'days_completed': 6,
+                'total_days': 7,
+                'status': 'in_progress'
+            },
+            {
+                'challenge_id': 2,
+                'title': '10,000 Steps Daily',
+                'progress_percentage': 42,
+                'days_completed': 3,
+                'total_days': 7,
+                'status': 'in_progress'
+            }
+        ]
+        
+        context.update({
+            'weekly_challenges': weekly_challenges,
+            'monthly_challenges': monthly_challenges,
+            'user_challenges': user_challenges,
+            'total_points': 1250,  # Mock user points
+            'completed_challenges': 8,  # Mock completed challenges count
+        })
+        return context
+
+
+class CommunityCornersView(LoginRequiredMixin, TemplateView):
+    template_name = 'web/community_corner.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Success Wall Posts (mock data)
+        success_posts = [
+            {
+                'id': 1,
+                'user_name': 'Priya Jayawardena',
+                'achievement': 'Completed 7-Day Millet Challenge!',
+                'description': 'Just finished my week of including millet in every meal. Feeling more energetic and my digestion has improved significantly!',
+                'image_url': 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400',
+                'posted_date': '2 hours ago',
+                'likes': 23,
+                'comments': 8,
+                'tags': ['millet', 'nutrition', 'health']
+            },
+            {
+                'id': 2,
+                'user_name': 'Kasun Silva',
+                'achievement': 'Lost 5kg with traditional Sri Lankan diet',
+                'description': 'Following our ancestral diet with lots of green leafy vegetables, kurakkan, and traditional preparations. Down 5kg in 6 weeks!',
+                'image_url': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400',
+                'posted_date': '1 day ago',
+                'likes': 45,
+                'comments': 12,
+                'tags': ['weight-loss', 'traditional-diet', 'success']
+            },
+            {
+                'id': 3,
+                'user_name': 'Amila Perera',
+                'achievement': 'Completed 30-day yoga challenge',
+                'description': 'From barely touching my toes to holding complex asanas! Thanks to my buddy Nimal for keeping me motivated throughout.',
+                'image_url': 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400',
+                'posted_date': '3 days ago',
+                'likes': 67,
+                'comments': 15,
+                'tags': ['yoga', 'flexibility', 'buddy-system']
+            }
+        ]
+        
+        # Buddy Match Suggestions (mock data)
+        buddy_suggestions = [
+            {
+                'id': 1,
+                'name': 'Sanduni Fernando',
+                'location': 'Colombo 07',
+                'interests': ['Morning walks', 'Healthy cooking', 'Meditation'],
+                'current_challenges': ['10,000 Steps Daily', 'Mindful Eating Week'],
+                'compatibility': 92,
+                'profile_image': 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
+                'mutual_connections': 3
+            },
+            {
+                'id': 2,
+                'name': 'Dinesh Rodrigo',
+                'location': 'Kandy',
+                'interests': ['Gym workouts', 'Protein smoothies', 'Running'],
+                'current_challenges': ['Yoga Master Challenge', 'Sri Lankan Superfood Month'],
+                'compatibility': 88,
+                'profile_image': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+                'mutual_connections': 1
+            },
+            {
+                'id': 3,
+                'name': 'Nimali Wickramasinghe',
+                'location': 'Galle',
+                'interests': ['Traditional cooking', 'Herb gardening', 'Ayurveda'],
+                'current_challenges': ['7-Day Millet Challenge'],
+                'compatibility': 85,
+                'profile_image': 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150',
+                'mutual_connections': 2
+            }
+        ]
+        
+        # Health & Nutrition Awareness Quests (mock data)
+        educational_quests = [
+            {
+                'id': 1,
+                'title': 'Benefits of Millet',
+                'description': 'Discover why ancient grains like millet are superfoods for modern health',
+                'duration': '8 minutes',
+                'type': 'video',
+                'difficulty': 'Beginner',
+                'points': 50,
+                'completed': False,
+                'thumbnail': 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300',
+                'topics': ['Nutrition', 'Traditional Foods', 'Superfoods']
+            },
+            {
+                'id': 2,
+                'title': 'How to Read Food Labels',
+                'description': 'Master the art of understanding nutrition labels and ingredient lists',
+                'duration': '12 minutes',
+                'type': 'interactive',
+                'difficulty': 'Intermediate',
+                'points': 75,
+                'completed': True,
+                'thumbnail': 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300',
+                'topics': ['Nutrition', 'Food Safety', 'Health Awareness']
+            },
+            {
+                'id': 3,
+                'title': 'Sri Lankan Superfood Guide',
+                'description': 'Explore the nutritional powerhouses hidden in traditional Sri Lankan cuisine',
+                'duration': '15 minutes',
+                'type': 'article',
+                'difficulty': 'Beginner',
+                'points': 60,
+                'completed': False,
+                'thumbnail': 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=300',
+                'topics': ['Sri Lankan Food', 'Nutrition', 'Cultural Heritage']
+            },
+            {
+                'id': 4,
+                'title': 'Mindful Eating Practices',
+                'description': 'Learn techniques to develop a healthier relationship with food',
+                'duration': '10 minutes',
+                'type': 'video',
+                'difficulty': 'Beginner',
+                'points': 55,
+                'completed': False,
+                'thumbnail': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300',
+                'topics': ['Mindfulness', 'Eating Habits', 'Mental Health']
+            },
+            {
+                'id': 5,
+                'title': 'Ayurvedic Nutrition Basics',
+                'description': 'Understanding your body type and eating according to Ayurvedic principles',
+                'duration': '18 minutes',
+                'type': 'interactive',
+                'difficulty': 'Advanced',
+                'points': 100,
+                'completed': False,
+                'thumbnail': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300',
+                'topics': ['Ayurveda', 'Personalized Nutrition', 'Traditional Medicine']
+            }
+        ]
+        
+        # User stats (mock data)
+        user_stats = {
+            'posts_shared': 12,
+            'likes_received': 156,
+            'buddy_connections': 3,
+            'quests_completed': 8,
+            'total_quest_points': 520
+        }
+        
+        context.update({
+            'success_posts': success_posts,
+            'buddy_suggestions': buddy_suggestions,
+            'educational_quests': educational_quests,
+            'user_stats': user_stats,
         })
         return context
 

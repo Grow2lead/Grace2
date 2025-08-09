@@ -17,3 +17,4 @@ urlpatterns = [
     # path('provider/', views.ProviderBookingsView.as_view(), name='provider-bookings'),
     # path('<uuid:booking_id>/confirm/', views.confirm_booking, name='confirm-booking'),
 ]
+

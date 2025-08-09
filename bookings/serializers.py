@@ -185,3 +185,4 @@ class ProviderBookingsSerializer(serializers.ModelSerializer):
             'payment_status', 'total_amount', 'customer_phone', 'customer_email',
             'special_requests', 'created_at'
         ]
+

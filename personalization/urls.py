@@ -16,3 +16,4 @@ urlpatterns = [
     path('recommendations/shown/', views.mark_recommendation_shown, name='recommendation-shown'),
     path('recommendations/accept/', views.accept_recommendation, name='recommendation-accept'),
 ]
+

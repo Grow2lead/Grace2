@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Corner - Rootedwell</title>
+  <style>
+    :root {
+      --primary-color: #059669;
+      --primary-dark: #047857;
+      --secondary-color: #0ea5e9;
+      --accent-color: #f59e0b;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --error-color: #ef4444;
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f9fafb;
+      --bg-accent: #ecfdf5;
+      --border-color: #e5e7eb;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 4rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .brand-icon {
+      font-size: 1.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+      background: var(--bg-accent);
+    }
+
+    .nav-links a.active {
+      color: var(--primary-color);
+      background: var(--bg-accent);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, #8b5cf6, #a855f7);
+      border-radius: 1rem;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      color: white;
+    }
+
+    .hero-section h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .hero-section p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+    }
+
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: var(--bg-primary);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      border: 1px solid var(--border-color);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #8b5cf6;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* Section Layout */
+    .main-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Success Wall */
+    .success-wall {
+      background: var(--bg-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    .post-card {
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .post-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .post-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .user-avatar {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .post-info h4 {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .post-achievement {
+      color: #8b5cf6;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .post-content {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .post-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .post-tags {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: var(--bg-accent);
+      color: var(--primary-color);
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .post-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .action-btn:hover {
+      color: var(--primary-color);
+    }
+
+    .action-btn.liked {
+      color: #ef4444;
+    }
+
+    .post-time {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .sidebar-section {
+      background: var(--bg-primary);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Buddy Match */
+    .buddy-card {
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: transform 0.2s ease;
+    }
+
+    .buddy-card:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .buddy-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .buddy-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .buddy-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .buddy-info h5 {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .buddy-location {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+
+    .compatibility {
+      color: var(--success-color);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .buddy-interests {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .interest-tag {
+      background: rgba(139, 92, 246, 0.1);
+      color: #8b5cf6;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    .connect-btn {
+      width: 100%;
+      padding: 0.5rem;
+      background: #8b5cf6;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .connect-btn:hover {
+      background: #7c3aed;
+    }
+
+    /* Educational Quests */
+    .quests-grid {
+      display: grid;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .quest-card {
+      background: var(--bg-primary);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+      display: flex;
+      gap: 1rem;
+      transition: transform 0.2s ease;
+    }
+
+    .quest-card:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .quest-thumbnail {
+      width: 80px;
+      height: 80px;
+      border-radius: 0.5rem;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .quest-content {
+      flex: 1;
+    }
+
+    .quest-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+
+    .quest-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .quest-type {
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    .quest-type.video {
+      background: rgba(239, 68, 68, 0.1);
+      color: #dc2626;
+    }
+
+    .quest-type.interactive {
+      background: rgba(59, 130, 246, 0.1);
+      color: #2563eb;
+    }
+
+    .quest-type.article {
+      background: rgba(34, 197, 94, 0.1);
+      color: #16a34a;
+    }
+
+    .quest-description {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .quest-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .quest-points {
+      background: var(--accent-color);
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      font-weight: 600;
+    }
+
+    .quest-completed {
+      opacity: 0.7;
+      position: relative;
+    }
+
+    .quest-completed::after {
+      content: '✓ Completed';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(16, 185, 129, 0.9);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--bg-primary);
+        border-top: 1px solid var(--border-color);
+        flex-direction: column;
+        padding: 1rem;
+        gap: 0;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links a {
+        width: 100%;
+        text-align: left;
+        padding: 0.75rem 1rem;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-section h1 {
+        font-size: 2rem;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <nav class="navbar">
+      <a href="{% url 'dashboard' %}" class="brand">
+        <div class="brand-icon">🌿</div>
+        <span>Rootedwell</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'nutrition' %}">Nutrition</a>
+        <a href="{% url 'activity' %}">Activity</a>
+        <a href="{% url 'meals_provider' %}">Meals Provider</a>
+        <a href="{% url 'fitness_centers' %}">Fitness Centers</a>
+        <a href="{% url 'challenge_hub' %}">Challenge Hub</a>
+        <a href="{% url 'community_corner' %}" class="active">Community Corner</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="/admin/" target="_blank">Admin</a>
+        {% if user.is_authenticated %}
+          <a href="/admin/logout/" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">Logout</a>
+        {% else %}
+          <a href="{% url 'login' %}" style="background: rgba(34, 197, 94, 0.2); color: #22c55e;">Login</a>
+        {% endif %}
+      </div>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <h1>🤝 Community Corner</h1>
+      <p>Connect, share your success, and learn together in our wellness community!</p>
+    </div>
+
+    <!-- Community Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-number">{{ user_stats.posts_shared }}</div>
+        <div class="stat-label">Posts Shared</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ user_stats.likes_received }}</div>
+        <div class="stat-label">Likes Received</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ user_stats.buddy_connections }}</div>
+        <div class="stat-label">Buddy Connections</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ user_stats.quests_completed }}</div>
+        <div class="stat-label">Quests Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ user_stats.total_quest_points }}</div>
+        <div class="stat-label">Quest Points</div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="main-content">
+      <!-- Success Wall -->
+      <div class="success-wall">
+        <div class="section-header">
+          <h2 class="section-title">🏆 Success Wall</h2>
+          <button style="padding: 0.5rem 1rem; background: #8b5cf6; color: white; border: none; border-radius: 0.5rem; cursor: pointer;">Share Your Success</button>
+        </div>
+
+        {% for post in success_posts %}
+        <div class="post-card">
+          <div class="post-header">
+            <div class="user-avatar">{{ post.user_name.0 }}</div>
+            <div class="post-info">
+              <h4>{{ post.user_name }}</h4>
+              <div class="post-achievement">{{ post.achievement }}</div>
+            </div>
+          </div>
+          
+          <div class="post-content">
+            {{ post.description }}
+          </div>
+          
+          {% if post.image_url %}
+          <img src="{{ post.image_url }}" alt="Success photo" class="post-image">
+          {% endif %}
+          
+          <div class="post-tags">
+            {% for tag in post.tags %}
+            <span class="tag">#{{ tag }}</span>
+            {% endfor %}
+          </div>
+          
+          <div class="post-actions">
+            <div class="action-buttons">
+              <button class="action-btn" onclick="toggleLike(this)">
+                ❤️ <span>{{ post.likes }}</span>
+              </button>
+              <button class="action-btn">
+                💬 <span>{{ post.comments }}</span>
+              </button>
+              <button class="action-btn">
+                📤 Share
+              </button>
+            </div>
+            <div class="post-time">{{ post.posted_date }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Buddy Match -->
+        <div class="sidebar-section">
+          <div class="section-header">
+            <h3 class="section-title">👫 Buddy Match</h3>
+          </div>
+          
+          {% for buddy in buddy_suggestions %}
+          <div class="buddy-card">
+            <div class="buddy-header">
+              <img src="{{ buddy.profile_image }}" alt="{{ buddy.name }}" class="buddy-avatar">
+              <div class="buddy-info">
+                <h5>{{ buddy.name }}</h5>
+                <div class="buddy-location">📍 {{ buddy.location }}</div>
+              </div>
+              <div class="compatibility">{{ buddy.compatibility }}% match</div>
+            </div>
+            
+            <div class="buddy-interests">
+              {% for interest in buddy.interests %}
+              <span class="interest-tag">{{ interest }}</span>
+              {% endfor %}
+            </div>
+            
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+              <strong>Current:</strong> {{ buddy.current_challenges|join:", " }}
+            </div>
+            
+            <button class="connect-btn" onclick="connectBuddy('{{ buddy.name }}')">
+              Connect as Buddy
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Health & Nutrition Awareness Quests -->
+    <div class="sidebar-section">
+      <div class="section-header">
+        <h2 class="section-title">🎓 Health & Nutrition Awareness Quests</h2>
+        <span style="color: var(--text-secondary);">Expand your wellness knowledge</span>
+      </div>
+      
+      <div class="quests-grid">
+        {% for quest in educational_quests %}
+        <div class="quest-card {% if quest.completed %}quest-completed{% endif %}">
+          <img src="{{ quest.thumbnail }}" alt="{{ quest.title }}" class="quest-thumbnail">
+          <div class="quest-content">
+            <div class="quest-header">
+              <div>
+                <h4 class="quest-title">{{ quest.title }}</h4>
+                <div class="quest-description">{{ quest.description }}</div>
+              </div>
+              <span class="quest-type {{ quest.type }}">{{ quest.type }}</span>
+            </div>
+            
+            <div class="quest-meta">
+              <div>
+                <span>⏱️ {{ quest.duration }}</span> • 
+                <span>📊 {{ quest.difficulty }}</span>
+              </div>
+              <span class="quest-points">+{{ quest.points }} pts</span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      navLinks.classList.toggle('active');
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const navLinks = document.getElementById('navLinks');
+      const menuBtn = document.querySelector('.mobile-menu-btn');
+      
+      if (!navLinks.contains(event.target) && !menuBtn.contains(event.target)) {
+        navLinks.classList.remove('active');
+      }
+    });
+
+    function toggleLike(btn) {
+      btn.classList.toggle('liked');
+      const span = btn.querySelector('span');
+      const currentLikes = parseInt(span.textContent);
+      
+      if (btn.classList.contains('liked')) {
+        span.textContent = currentLikes + 1;
+        btn.innerHTML = '❤️ <span>' + (currentLikes + 1) + '</span>';
+      } else {
+        span.textContent = currentLikes - 1;
+        btn.innerHTML = '🤍 <span>' + (currentLikes - 1) + '</span>';
+      }
+    }
+
+    function connectBuddy(name) {
+      // Simulate buddy connection
+      event.target.textContent = 'Request Sent!';
+      event.target.style.background = '#10b981';
+      event.target.disabled = true;
+      
+      // Reset after 3 seconds for demo
+      setTimeout(() => {
+        event.target.textContent = 'Connect as Buddy';
+        event.target.style.background = '';
+        event.target.disabled = false;
+      }, 3000);
+    }
+
+    // Quest click handlers
+    document.querySelectorAll('.quest-card:not(.quest-completed)').forEach(card => {
+      card.addEventListener('click', function() {
+        // Simulate starting quest
+        this.style.opacity = '0.7';
+        this.style.transform = 'scale(0.98)';
+        
+        setTimeout(() => {
+          this.style.opacity = '';
+          this.style.transform = '';
+          alert('Quest started! Continue learning to earn points.');
+        }, 200);
+      });
+    });
+  </script>
+</body>
+</html>
+

@@ -240,3 +240,4 @@ class Command(BaseCommand):
             self.style.SUCCESS(f'Successfully created {created_count} sample providers!')
         )
         self.stdout.write('Sample providers are ready for testing the marketplace functionality.')
+

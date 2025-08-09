@@ -179,3 +179,4 @@ class FitnessSearchSerializer(serializers.Serializer):
         required=False,
         default=10
     )
+

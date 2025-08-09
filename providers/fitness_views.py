@@ -3,9 +3,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q, Count, Avg
-from django.contrib.gis.db.models.functions import Distance
-from django.contrib.gis.geos import Point
-from django.contrib.gis.measure import D
 from decimal import Decimal
 import math
 
@@ -87,7 +84,6 @@ class FitnessCenterListView(generics.ListAPIView):
         
         if lat and lng:
             try:
-                user_location = Point(float(lng), float(lat), srid=4326)
                 radius_km = float(radius)
                 queryset = queryset.filter(
                     provider__latitude__isnull=False,

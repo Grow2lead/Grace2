@@ -9,3 +9,4 @@ urlpatterns = [
     path('suggestions/', views.search_suggestions, name='search-suggestions'),
     path('filters/', views.search_filters, name='search-filters'),
 ]
+

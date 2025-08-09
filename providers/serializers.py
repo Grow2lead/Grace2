@@ -201,3 +201,4 @@ class ProviderSearchSerializer(serializers.ModelSerializer):
     def get_starting_price(self, obj):
         min_price_service = obj.services.filter(is_active=True).order_by('price').first()
         return min_price_service.price if min_price_service else None
+

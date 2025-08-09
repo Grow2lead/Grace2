@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Challenge Hub - Rootedwell</title>
+  <style>
+    :root {
+      --primary-color: #059669;
+      --primary-dark: #047857;
+      --secondary-color: #0ea5e9;
+      --accent-color: #f59e0b;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --error-color: #ef4444;
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f9fafb;
+      --bg-accent: #ecfdf5;
+      --border-color: #e5e7eb;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 4rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .brand-icon {
+      font-size: 1.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+      background: var(--bg-accent);
+    }
+
+    .nav-links a.active {
+      color: var(--primary-color);
+      background: var(--bg-accent);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      border-radius: 1rem;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      color: white;
+    }
+
+    .hero-section h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .hero-section p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+    }
+
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: var(--bg-primary);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      border: 1px solid var(--border-color);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* Challenge Sections */
+    .challenges-section {
+      margin-bottom: 3rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .view-all-btn {
+      padding: 0.5rem 1rem;
+      background: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      transition: background 0.2s ease;
+    }
+
+    .view-all-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Challenge Grid */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .challenge-card {
+      background: var(--bg-primary);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .challenge-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .challenge-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .challenge-type {
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .challenge-type.nutrition {
+      background: rgba(34, 197, 94, 0.1);
+      color: #15803d;
+    }
+
+    .challenge-type.fitness {
+      background: rgba(59, 130, 246, 0.1);
+      color: #1d4ed8;
+    }
+
+    .challenge-type.wellness {
+      background: rgba(168, 85, 247, 0.1);
+      color: #7c3aed;
+    }
+
+    .challenge-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .challenge-description {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .challenge-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .challenge-stats {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .difficulty {
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .difficulty.easy {
+      background: rgba(34, 197, 94, 0.1);
+      color: #15803d;
+    }
+
+    .difficulty.medium {
+      background: rgba(245, 158, 11, 0.1);
+      color: #d97706;
+    }
+
+    .difficulty.hard {
+      background: rgba(239, 68, 68, 0.1);
+      color: #dc2626;
+    }
+
+    .challenge-action {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .join-btn {
+      flex: 1;
+      padding: 0.75rem;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .join-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .points-badge {
+      background: var(--accent-color);
+      color: white;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* Progress Section */
+    .progress-section {
+      background: var(--bg-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-card {
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .progress-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-title {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .progress-percentage {
+      font-size: 0.9rem;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 0.5rem;
+      background: var(--border-color);
+      border-radius: 0.25rem;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary-color);
+      border-radius: 0.25rem;
+      transition: width 0.3s ease;
+    }
+
+    .progress-details {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--bg-primary);
+        border-top: 1px solid var(--border-color);
+        flex-direction: column;
+        padding: 1rem;
+        gap: 0;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links a {
+        width: 100%;
+        text-align: left;
+        padding: 0.75rem 1rem;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .hero-section h1 {
+        font-size: 2rem;
+      }
+
+      .challenge-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <nav class="navbar">
+      <a href="{% url 'dashboard' %}" class="brand">
+        <div class="brand-icon">🌿</div>
+        <span>Rootedwell</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'nutrition' %}">Nutrition</a>
+        <a href="{% url 'activity' %}">Activity</a>
+        <a href="{% url 'meals_provider' %}">Meals Provider</a>
+        <a href="{% url 'fitness_centers' %}">Fitness Centers</a>
+        <a href="{% url 'challenge_hub' %}" class="active">Challenge Hub</a>
+        <a href="{% url 'community_corner' %}">Community Corner</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="/admin/" target="_blank">Admin</a>
+        {% if user.is_authenticated %}
+          <a href="/admin/logout/" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">Logout</a>
+        {% else %}
+          <a href="{% url 'login' %}" style="background: rgba(34, 197, 94, 0.2); color: #22c55e;">Login</a>
+        {% endif %}
+      </div>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <h1>🏆 Challenge Hub</h1>
+      <p>Join wellness challenges, track your progress, and earn rewards while building healthy habits!</p>
+    </div>
+
+    <!-- User Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-number">{{ total_points }}</div>
+        <div class="stat-label">Total Points</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ completed_challenges }}</div>
+        <div class="stat-label">Completed Challenges</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ user_challenges|length }}</div>
+        <div class="stat-label">Active Challenges</div>
+      </div>
+    </div>
+
+    <!-- My Progress -->
+    {% if user_challenges %}
+    <div class="challenges-section">
+      <div class="section-header">
+        <h2 class="section-title">📊 My Active Challenges</h2>
+      </div>
+      <div class="progress-section">
+        {% for challenge in user_challenges %}
+        <div class="progress-card">
+          <div class="progress-header">
+            <div class="progress-title">{{ challenge.title }}</div>
+            <div class="progress-percentage">{{ challenge.progress_percentage }}%</div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ challenge.progress_percentage }}%;"></div>
+          </div>
+          <div class="progress-details">
+            <span>{{ challenge.days_completed }}/{{ challenge.total_days }} days completed</span>
+            <span>{{ challenge.status|title }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Weekly Challenges -->
+    <div class="challenges-section">
+      <div class="section-header">
+        <h2 class="section-title">📅 Weekly Challenges</h2>
+        <a href="#" class="view-all-btn">View All</a>
+      </div>
+      <div class="challenge-grid">
+        {% for challenge in weekly_challenges %}
+        <div class="challenge-card">
+          <div class="challenge-header">
+            <div class="challenge-type {{ challenge.type }}">{{ challenge.type }}</div>
+            <div class="difficulty {{ challenge.difficulty|lower }}">{{ challenge.difficulty }}</div>
+          </div>
+          <h3 class="challenge-title">{{ challenge.title }}</h3>
+          <p class="challenge-description">{{ challenge.description }}</p>
+          <div class="challenge-meta">
+            <div class="challenge-stats">
+              <span>👥 {{ challenge.participants }} joined</span>
+              <span>⏰ {{ challenge.duration_days }} days</span>
+            </div>
+          </div>
+          <div class="challenge-action">
+            <button class="join-btn">Join Challenge</button>
+            <div class="points-badge">+{{ challenge.reward_points }} pts</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Monthly Challenges -->
+    <div class="challenges-section">
+      <div class="section-header">
+        <h2 class="section-title">🗓️ Monthly Challenges</h2>
+        <a href="#" class="view-all-btn">View All</a>
+      </div>
+      <div class="challenge-grid">
+        {% for challenge in monthly_challenges %}
+        <div class="challenge-card">
+          <div class="challenge-header">
+            <div class="challenge-type {{ challenge.type }}">{{ challenge.type }}</div>
+            <div class="difficulty {{ challenge.difficulty|lower }}">{{ challenge.difficulty }}</div>
+          </div>
+          <h3 class="challenge-title">{{ challenge.title }}</h3>
+          <p class="challenge-description">{{ challenge.description }}</p>
+          <div class="challenge-meta">
+            <div class="challenge-stats">
+              <span>👥 {{ challenge.participants }} joined</span>
+              <span>⏰ {{ challenge.duration_days }} days</span>
+            </div>
+          </div>
+          <div class="challenge-action">
+            <button class="join-challenge-btn">Join Challenge</button>
+            <div class="points-badge">+{{ challenge.reward_points }} pts</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      navLinks.classList.toggle('active');
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const navLinks = document.getElementById('navLinks');
+      const menuBtn = document.querySelector('.mobile-menu-btn');
+      
+      if (!navLinks.contains(event.target) && !menuBtn.contains(event.target)) {
+        navLinks.classList.remove('active');
+      }
+    });
+
+    // Join challenge functionality
+    document.querySelectorAll('.join-btn, .join-challenge-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Simulate joining challenge
+        this.textContent = 'Joined!';
+        this.style.background = '#10b981';
+        this.disabled = true;
+        
+        // Reset after 2 seconds for demo
+        setTimeout(() => {
+          this.textContent = 'Join Challenge';
+          this.style.background = '';
+          this.disabled = false;
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>
