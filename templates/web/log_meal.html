@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log Meal - Health App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; 
+      background: #f8fafc; 
+      color: #1e293b;
+    }
+    .navbar {
+      background: #0ea5e9; 
+      color: #fff; 
+      padding: 16px 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .navbar-content {
+      max-width: 1200px; 
+      margin: 0 auto; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+    }
+    .nav-links a {
+      color: #fff; 
+      text-decoration: none; 
+      margin-left: 24px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .nav-links a:hover { background: rgba(255,255,255,0.2); }
+    .container { 
+      max-width: 600px; 
+      margin: 0 auto; 
+      padding: 24px 20px; 
+    }
+    .form-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .form-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #111827;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #374151;
+    }
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: #0ea5e9;
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #0ea5e9;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .btn:hover {
+      background: #0284c7;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: #6b7280;
+      margin-right: 12px;
+    }
+    .btn-secondary:hover { background: #4b5563; }
+    .form-actions {
+      margin-top: 32px;
+      display: flex;
+      gap: 12px;
+    }
+    .help-text {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    .food-preview {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 8px;
+      display: none;
+    }
+    .food-preview.show {
+      display: block;
+    }
+    .food-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+    .food-info span {
+      color: #6b7280;
+    }
+    .food-info strong {
+      color: #111827;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-content">
+      <h1>Log Meal</h1>
+      <div class="nav-links">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'nutrition' %}">Nutrition</a>
+        <a href="{% url 'activity' %}">Activity</a>
+        <a href="/admin/" target="_blank">Admin</a>
+        <a href="/admin/logout/">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="form-card">
+      <h2 class="form-title">Log a New Meal</h2>
+      
+      <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          <label for="id_food" class="form-label">Food</label>
+          <select name="food" id="id_food" class="form-control" required>
+            <option value="">Select a food...</option>
+            {% for food in foods %}
+              <option value="{{ food.id }}" 
+                      data-calories="{{ food.calories }}"
+                      data-protein="{{ food.protein_g }}"
+                      data-carbs="{{ food.carbs_g }}"
+                      data-fat="{{ food.fat_g }}"
+                      data-serving="{{ food.serving_size_grams }}">
+                {{ food.name }} ({{ food.calories }} cal/{{ food.serving_size_grams }}g)
+              </option>
+            {% endfor %}
+          </select>
+          <div class="help-text">Choose from our database of foods</div>
+        </div>
+
+        <div class="food-preview" id="food-preview">
+          <div class="food-info">
+            <div><span>Calories:</span> <strong id="preview-calories">-</strong></div>
+            <div><span>Protein:</span> <strong id="preview-protein">-</strong>g</div>
+            <div><span>Carbs:</span> <strong id="preview-carbs">-</strong>g</div>
+            <div><span>Fat:</span> <strong id="preview-fat">-</strong>g</div>
+            <div><span>Serving:</span> <strong id="preview-serving">-</strong>g</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="id_quantity" class="form-label">Quantity</label>
+          <input type="number" name="quantity" id="id_quantity" class="form-control" 
+                 step="0.1" min="0.1" value="1.0" required>
+          <div class="help-text">Multiplier of the serving size (e.g., 1.5 = 1.5 servings)</div>
+        </div>
+
+        <div class="form-group">
+          <label for="id_meal_type" class="form-label">Meal Type</label>
+          <select name="meal_type" id="id_meal_type" class="form-control" required>
+            <option value="">Select meal type...</option>
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="id_log_date" class="form-label">Date</label>
+          <input type="date" name="log_date" id="id_log_date" class="form-control" 
+                 value="{{ today|date:'Y-m-d' }}" required>
+        </div>
+
+        <div class="form-actions">
+          <a href="{% url 'nutrition' %}" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn">Log Meal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const foodSelect = document.getElementById('id_food');
+    const foodPreview = document.getElementById('food-preview');
+    const previewCalories = document.getElementById('preview-calories');
+    const previewProtein = document.getElementById('preview-protein');
+    const previewCarbs = document.getElementById('preview-carbs');
+    const previewFat = document.getElementById('preview-fat');
+    const previewServing = document.getElementById('preview-serving');
+
+    foodSelect.addEventListener('change', function() {
+      const selectedOption = this.options[this.selectedIndex];
+      if (selectedOption.value) {
+        const calories = selectedOption.dataset.calories;
+        const protein = selectedOption.dataset.protein;
+        const carbs = selectedOption.dataset.carbs;
+        const fat = selectedOption.dataset.fat;
+        const serving = selectedOption.dataset.serving;
+
+        previewCalories.textContent = calories;
+        previewProtein.textContent = protein;
+        previewCarbs.textContent = carbs;
+        previewFat.textContent = fat;
+        previewServing.textContent = serving;
+
+        foodPreview.classList.add('show');
+      } else {
+        foodPreview.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

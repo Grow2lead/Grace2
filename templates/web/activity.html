@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Activity - Health App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; 
+      background: #f8fafc; 
+      color: #1e293b;
+    }
+    .navbar {
+      background: #0ea5e9; 
+      color: #fff; 
+      padding: 16px 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .navbar-content {
+      max-width: 1200px; 
+      margin: 0 auto; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+    }
+    .nav-links a {
+      color: #fff; 
+      text-decoration: none; 
+      margin-left: 24px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .nav-links a:hover { background: rgba(255,255,255,0.2); }
+    .container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 24px 20px; 
+    }
+    .header-section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .date-picker {
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #0ea5e9;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+    .activities-section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .activity-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-info {
+      flex: 1;
+    }
+    .activity-name {
+      font-weight: 500;
+      color: #111827;
+      font-size: 1.1rem;
+    }
+    .activity-details {
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+    .activity-stats {
+      text-align: right;
+    }
+    .activity-duration {
+      font-weight: 600;
+      color: #0ea5e9;
+      font-size: 1.1rem;
+    }
+    .activity-calories {
+      color: #10b981;
+      font-size: 0.9rem;
+      margin-top: 2px;
+    }
+    .empty-state {
+      text-align: center;
+      color: #64748b;
+      padding: 40px 20px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      background: #0ea5e9;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #0284c7;
+      transform: translateY(-1px);
+    }
+    .activity-type-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .walk { background: #dbeafe; color: #1e40af; }
+    .run { background: #fef3c7; color: #92400e; }
+    .cycle { background: #d1fae5; color: #065f46; }
+    .workout { background: #fce7f3; color: #be185d; }
+    .yoga { background: #f3e8ff; color: #7c3aed; }
+    .other { background: #f3f4f6; color: #374151; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-content">
+      <h1>Activity</h1>
+      <div class="nav-links">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'nutrition' %}">Nutrition</a>
+        <a href="{% url 'activity' %}">Activity</a>
+        <a href="/admin/" target="_blank">Admin</a>
+        <a href="/admin/logout/">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="header-section">
+      <div>
+        <h2>Activity Tracker</h2>
+        <p>Track your workouts and daily activities</p>
+      </div>
+      <div>
+        <input type="date" class="date-picker" value="{{ selected_date }}" onchange="window.location.href='?date=' + this.value">
+        <a href="{% url 'log_activity' %}" class="btn" style="margin-left: 12px;">🏃 Log Activity</a>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">{{ activities|length }}</div>
+        <div class="stat-label">Activities Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">
+          {% with total_minutes=0 %}
+            {% for activity in activities %}
+              {% with total_minutes=total_minutes|add:activity.duration_minutes %}
+              {% endwith %}
+            {% endfor %}
+            {{ total_minutes }}
+          {% endwith %}
+        </div>
+        <div class="stat-label">Total Minutes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">
+          {% with total_distance=0 %}
+            {% for activity in activities %}
+              {% with total_distance=total_distance|add:activity.distance_km %}
+              {% endwith %}
+            {% endfor %}
+            {{ total_distance|floatformat:1 }}
+          {% endwith %}
+        </div>
+        <div class="stat-label">Distance (km)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">
+          {% with total_calories=0 %}
+            {% for activity in activities %}
+              {% with total_calories=total_calories|add:activity.calories_burned %}
+              {% endwith %}
+            {% endfor %}
+            {{ total_calories|floatformat:0 }}
+          {% endwith %}
+        </div>
+        <div class="stat-label">Calories Burned</div>
+      </div>
+    </div>
+
+    <div class="activities-section">
+      <h3>Activities for {{ selected_date|date:"F j, Y" }}</h3>
+      
+      {% if activities %}
+        {% for activity in activities %}
+        <div class="activity-item">
+          <div class="activity-info">
+            <div class="activity-type-badge {{ activity.activity_type }}">
+              {{ activity.get_activity_type_display }}
+            </div>
+            <div class="activity-name">{{ activity.get_activity_type_display }}</div>
+            <div class="activity-details">
+              Started at {{ activity.started_at|date:"g:i A" }}
+              {% if activity.distance_km %}
+                • {{ activity.distance_km|floatformat:1 }} km
+              {% endif %}
+            </div>
+          </div>
+          <div class="activity-stats">
+            <div class="activity-duration">{{ activity.duration_minutes }} min</div>
+            {% if activity.calories_burned %}
+              <div class="activity-calories">{{ activity.calories_burned|floatformat:0 }} cal burned</div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <p>No activities logged for this date</p>
+          <a href="{% url 'log_activity' %}" class="btn" style="margin-top: 12px;">Log your first activity</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>
