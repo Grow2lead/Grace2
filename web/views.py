@@ -544,6 +544,18 @@ class LogMealView(LoginRequiredMixin, CreateView):
         messages.success(self.request, 'Meal logged successfully!')
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Provide foods and categories for the custom template UI
+        all_foods = Food.objects.select_related('category').order_by('name')
+        categories = FoodCategory.objects.order_by('name')
+        context.update({
+            'foods': all_foods,
+            'categories': categories,
+            'today': date.today(),
+        })
+        return context
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LogActivityView(LoginRequiredMixin, CreateView):

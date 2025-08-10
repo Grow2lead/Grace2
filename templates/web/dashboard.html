@@ -140,23 +140,32 @@
       <div class="hero-content">
         <h2>Fuel your day with smarter choices</h2>
         <p>Track meals, log activities, and discover local wellness providers.</p>
+        <p>Together, we can create a healthier, more connected world. Small, mindful choices today lead to stronger communities tomorrow. Let’s embrace wellness, one step at a time.</p>
       </div>
     </div>
     {% if show_intro %}
       <div class="welcome-section">
         <h2>Welcome, {{ request.user.display_name|default:request.user.username }}!</h2>
         <p>Let’s get you started. You can log your first meal or activity, or explore nutrition and fitness options.</p>
+        <p style="color:#64748b; margin-top:6px;">You're doing great — small steps today become healthy habits tomorrow.</p>
       </div>
       <div class="quick-actions">
         <a href="{% url 'log_meal' %}" class="action-btn">➕ Log First Meal</a>
         <a href="{% url 'log_activity' %}" class="action-btn">🏃 Log First Activity</a>
         <a href="{% url 'nutrition' %}" class="action-btn">🍽️ Explore Nutrition</a>
+        <a href="{% url 'activity' %}" class="action-btn">📊 View Activity</a>
+        <a href="{% url 'meals_provider' %}" class="action-btn">🍱 Find Meal Providers</a>
         <a href="{% url 'fitness_centers' %}" class="action-btn">🏋️ Find Fitness Centers</a>
+        <a href="{% url 'challenge_hub' %}" class="action-btn">🏆 Challenge Hub</a>
+        <a href="{% url 'community_corner' %}" class="action-btn">🤝 Community Corner</a>
+        <a href="{% url 'book_expert' %}" class="action-btn">🧑‍⚕️ Book Expert</a>
+        <a href="{% url 'profile' %}" class="action-btn">👤 View Profile</a>
       </div>
     {% else %}
       <div class="welcome-section">
         <h2>Welcome back, {{ request.user.display_name|default:request.user.username }}!</h2>
         <p>Here's your health summary for today ({{ today|date:"F j, Y" }})</p>
+        <p style="color:#64748b; margin-top:6px;">Keep the momentum going — even a quick log makes a difference.</p>
       </div>
 
       <div class="stats-grid">

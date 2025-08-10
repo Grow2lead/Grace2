@@ -8,56 +8,31 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write('Creating Sri Lankan food categories...')
         
-        # Create food categories
+        # Create a broad set of Sri Lankan food type categories
         categories_data = [
-            {
-                'name': 'Rice & Grains',
-                'name_si': 'බත් සහ ධාන්‍ය',
-                'name_ta': 'அரிசி மற்றும் தானியங்கள்',
-                'description': 'Staple grains and rice varieties'
-            },
-            {
-                'name': 'Vegetables',
-                'name_si': 'එළවළු',
-                'name_ta': 'காய்கறிகள்',
-                'description': 'Fresh and local vegetables'
-            },
-            {
-                'name': 'Fruits',
-                'name_si': 'පලතුරු',
-                'name_ta': 'பழங்கள்',
-                'description': 'Tropical and local fruits'
-            },
-            {
-                'name': 'Legumes & Pulses',
-                'name_si': 'කොළ ගස් සහ ධාන්‍ය',
-                'name_ta': 'பருப்பு வகைகள்',
-                'description': 'Lentils, beans and pulses'
-            },
-            {
-                'name': 'Spices & Herbs',
-                'name_si': 'කුළුබඩු සහ ඖෂධ පැළෑටි',
-                'name_ta': 'மசாலா மற்றும் மூலிகைகள்',
-                'description': 'Traditional spices and herbs'
-            },
-            {
-                'name': 'Seafood',
-                'name_si': 'මුහුදු ආහාර',
-                'name_ta': 'கடல் உணவு',
-                'description': 'Fresh fish and seafood'
-            },
-            {
-                'name': 'Meat & Poultry',
-                'name_si': 'මස් සහ කුකුළු මස්',
-                'name_ta': 'இறைச்சி மற்றும் கோழி',
-                'description': 'Meat and poultry products'
-            },
-            {
-                'name': 'Traditional Dishes',
-                'name_si': 'සාම්ප්‍රදායික ආහාර',
-                'name_ta': 'பாரம்பரிய உணவுகள்',
-                'description': 'Traditional Sri Lankan prepared foods'
-            }
+            { 'name': 'Rice & Grains', 'name_si': 'බත් සහ ධාන්‍ය', 'name_ta': 'அரிசி மற்றும் தானியங்கள்', 'description': 'Staple grains and rice varieties' },
+            { 'name': 'Millets & Traditional Grains', 'name_si': 'මැඉස් සහ සම්ප්‍රදායික ධාන්‍ය', 'name_ta': 'கம்பு மற்றும் பாரம்பரிய தானியங்கள்', 'description': 'Kurakkan, bajra, sorghum and more' },
+            { 'name': 'Breads & Rotis', 'name_si': 'පාන් සහ රොටි', 'name_ta': 'ரொட்டி மற்றும் அப்பம்', 'description': 'Roti, paratha, godamba, etc.' },
+            { 'name': 'Hoppers & String Hoppers', 'name_si': 'අප්පා සහ ඉඳිඅප්පා', 'name_ta': 'அப்பம் மற்றும் இடியாப்பம்', 'description': 'Appa, indiappa and variants' },
+            { 'name': 'Pittu & Kenda', 'name_si': 'පිට්ටු සහ කැඳ', 'name_ta': 'புட்டு மற்றும் கஞ்சி', 'description': 'Pittu, kola kenda and porridges' },
+            { 'name': 'Vegetables', 'name_si': 'එළවළු', 'name_ta': 'காய்கறிகள்', 'description': 'Fresh and local vegetables' },
+            { 'name': 'Leafy Greens', 'name_si': 'කොළ', 'name_ta': 'கீரைகள்', 'description': 'Gotukola, mukunuwenna and leafy varieties' },
+            { 'name': 'Tubers & Roots', 'name_si': 'මූලාහාර', 'name_ta': 'கிழங்கு வகைகள்', 'description': 'Manioc, sweet potato, yam, etc.' },
+            { 'name': 'Fruits', 'name_si': 'පලතුරු', 'name_ta': 'பழங்கள்', 'description': 'Tropical and local fruits' },
+            { 'name': 'Legumes & Pulses', 'name_si': 'පයා සහ පල්ස්', 'name_ta': 'பருப்பு வகைகள்', 'description': 'Lentils, beans and pulses' },
+            { 'name': 'Nuts & Seeds', 'name_si': 'කොලඟු සහ බීජ', 'name_ta': 'விதைகள் மற்றும் பருப்பு', 'description': 'Cashew, sesame, peanuts' },
+            { 'name': 'Dairy & Eggs', 'name_si': 'කිරි හා බිත්තර', 'name_ta': 'பால் மற்றும் முட்டை', 'description': 'Curd, milk, ghee and eggs' },
+            { 'name': 'Seafood', 'name_si': 'මුහුදු ආහාර', 'name_ta': 'கடல் உணவு', 'description': 'Fresh fish and seafood' },
+            { 'name': 'Meat & Poultry', 'name_si': 'මස් සහ කුකුළු මස්', 'name_ta': 'இறைச்சி மற்றும் கோழி', 'description': 'Meat and poultry products' },
+            { 'name': 'Spices & Herbs', 'name_si': 'කුළුබඩු සහ ඖෂධ පැළෑටි', 'name_ta': 'மசாலா மற்றும் மூலிகைகள்', 'description': 'Traditional spices and herbs' },
+            { 'name': 'Oils & Fats', 'name_si': 'තෙල්', 'name_ta': 'எண்ணெய்கள்', 'description': 'Coconut oil and others' },
+            { 'name': 'Sambols & Chutneys', 'name_si': 'සම්බෝල් සහ චට්නි', 'name_ta': 'சம்பல் மற்றும் சட்னி', 'description': 'Pol sambol, lunu miris, seeni sambol' },
+            { 'name': 'Pickles & Condiments', 'name_si': 'අච්චාරු සහ පඳුරු', 'name_ta': 'ஊறுகாய் மற்றும் துணை உணவுகள்', 'description': 'Achcharu and condiments' },
+            { 'name': 'Curries & Gravies', 'name_si': 'කරිය', 'name_ta': 'கறி வகைகள்', 'description': 'Sri Lankan curries' },
+            { 'name': 'Sweets & Desserts', 'name_si': 'මීඇස සහ මී පැණි', 'name_ta': 'இனிப்பு மற்றும் டெசர்ட்', 'description': 'Kevum, aluwa, wattalappam, etc.' },
+            { 'name': 'Beverages & Herbal Drinks', 'name_si': 'පානීය සහ ඖෂධ පානය', 'name_ta': 'பானங்கள் மற்றும் மூலிகை பானங்கள்', 'description': 'King coconut, herbal drinks, tea' },
+            { 'name': 'Traditional Dishes', 'name_si': 'සාම්ප්‍රදායික ආහාර', 'name_ta': 'பாரம்பரிய உணவுகள்', 'description': 'Traditional prepared foods' },
+            { 'name': 'Short Eats (Snacks)', 'name_si': 'ස්නැක්ස්', 'name_ta': 'ஸ்நாக்ஸ்', 'description': 'Pastries, rolls, vadai, etc.' }
         ]
 
         categories = {}
@@ -83,7 +58,7 @@ class Command(BaseCommand):
                 'carbs_g': 28.0,
                 'fat_g': 0.3,
                 'fiber_g': 0.4,
-                'origin': 'LK',
+                'origin': 'local',
                 'region': 'All',
                 'common_serving_size': '1 cup cooked',
                 'is_vegetarian': True,
@@ -101,7 +76,7 @@ class Command(BaseCommand):
                 'carbs_g': 45.0,
                 'fat_g': 1.8,
                 'fiber_g': 3.5,
-                'origin': 'LK',
+                'origin': 'local',
                 'region': 'All',
                 'common_serving_size': '1 cup cooked',
                 'is_vegetarian': True,
@@ -121,7 +96,7 @@ class Command(BaseCommand):
                 'fat_g': 0.2,
                 'fiber_g': 1.8,
                 'vitamin_c_mg': 48.5,
-                'origin': 'LK',
+                'origin': 'local',
                 'region': 'All',
                 'common_serving_size': '100g',
                 'is_vegetarian': True,
@@ -141,7 +116,7 @@ class Command(BaseCommand):
                 'fiber_g': 2.1,
                 'vitamin_c_mg': 52.0,
                 'iron_mg': 3.2,
-                'origin': 'LK',
+                'origin': 'local',
                 'region': 'All',
                 'common_serving_size': '100g',
                 'is_vegetarian': True,
@@ -160,7 +135,7 @@ class Command(BaseCommand):
                 'carbs_g': 3.7,
                 'fat_g': 0.2,
                 'sodium_mg': 105,
-                'origin': 'LK',
+                'origin': 'local',
                 'region': 'All',
                 'common_serving_size': '240ml',
                 'is_vegetarian': True,
@@ -179,7 +154,7 @@ class Command(BaseCommand):
                 'fat_g': 0.2,
                 'fiber_g': 0.9,
                 'vitamin_c_mg': 4.9,
-                'origin': 'LK',
+                'origin': 'local',
                 'region': 'Wet Zone',
                 'common_serving_size': '100g (about 5 fruits)',
                 'is_vegetarian': True,
@@ -199,7 +174,7 @@ class Command(BaseCommand):
                 'fat_g': 0.4,
                 'fiber_g': 7.9,
                 'iron_mg': 3.3,
-                'origin': 'LK',
+                'origin': 'local',
                 'region': 'All',
                 'common_serving_size': '100g cooked',
                 'is_vegetarian': True,
@@ -279,7 +254,7 @@ class Command(BaseCommand):
                 self.stdout.write(f'Created food: {food.name}')
                 
                 # Create LocalFoodDatabase entry for traditional foods
-                if food_data.get('origin') == 'LK':
+                if food_data.get('origin') == 'local':
                     LocalFoodDatabase.objects.get_or_create(
                         food=food,
                         defaults={

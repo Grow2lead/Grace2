@@ -135,21 +135,41 @@
         {% csrf_token %}
         
         <div class="form-group">
+          <label for="id_category" class="form-label">Food Type</label>
+          <select id="id_category" class="form-control">
+            <option value="">All types...</option>
+            {% for cat in categories %}
+              <option value="{{ cat.id }}">{{ cat.name }}</option>
+            {% endfor %}
+          </select>
+          <div class="help-text">Filter foods by Sri Lankan food type/category</div>
+        </div>
+
+        <div class="form-group">
+          <label for="food_search" class="form-label">Search Foods</label>
+          <input type="text" id="food_search" class="form-control" placeholder="Type to search (English/Sinhala/Tamil)...">
+          <div class="help-text">Quickly find foods by name</div>
+        </div>
+
+        <div class="form-group">
           <label for="id_food" class="form-label">Food</label>
           <select name="food" id="id_food" class="form-control" required>
             <option value="">Select a food...</option>
             {% for food in foods %}
               <option value="{{ food.id }}" 
+                      data-category="{{ food.category_id }}"
                       data-calories="{{ food.calories }}"
                       data-protein="{{ food.protein_g }}"
                       data-carbs="{{ food.carbs_g }}"
                       data-fat="{{ food.fat_g }}"
-                      data-serving="{{ food.serving_size_grams }}">
-                {{ food.name }} ({{ food.calories }} cal/{{ food.serving_size_grams }}g)
+                      data-serving="{{ food.serving_size_grams }}"
+                      data-text="{{ food.name|lower }} {% if food.name_si %}{{ food.name_si|lower }}{% endif %} {% if food.name_ta %}{{ food.name_ta|lower }}{% endif %}">
+                {{ food.name }}{% if food.name_si %} / {{ food.name_si }}{% endif %}{% if food.name_ta %} / {{ food.name_ta }}{% endif %}
+                ({{ food.calories }} cal/{{ food.serving_size_grams }}g)
               </option>
             {% endfor %}
           </select>
-          <div class="help-text">Choose from our database of foods</div>
+          <div class="help-text">Choose from our database of Sri Lankan foods</div>
         </div>
 
         <div class="food-preview" id="food-preview">
@@ -196,6 +216,8 @@
 
   <script>
     const foodSelect = document.getElementById('id_food');
+    const categorySelect = document.getElementById('id_category');
+    const foodSearch = document.getElementById('food_search');
     const foodPreview = document.getElementById('food-preview');
     const previewCalories = document.getElementById('preview-calories');
     const previewProtein = document.getElementById('preview-protein');
@@ -222,6 +244,38 @@
       } else {
         foodPreview.classList.remove('show');
       }
+    });
+
+    // Filter foods by category client-side
+    categorySelect.addEventListener('change', function() {
+      const selectedCat = this.value;
+      const options = Array.from(foodSelect.options);
+      options.forEach((opt, idx) => {
+        if (idx === 0) return; // keep placeholder
+        const catId = opt.getAttribute('data-category');
+        const show = !selectedCat || selectedCat === catId;
+        opt.hidden = !show;
+      });
+      // Reset food selection when category changes
+      foodSelect.value = '';
+      foodPreview.classList.remove('show');
+    });
+
+    // Text search filter (works alongside category filter)
+    foodSearch.addEventListener('input', function() {
+      const q = this.value.trim().toLowerCase();
+      const selectedCat = categorySelect.value;
+      const options = Array.from(foodSelect.options);
+      options.forEach((opt, idx) => {
+        if (idx === 0) return;
+        const text = (opt.getAttribute('data-text') || '').toLowerCase();
+        const catId = opt.getAttribute('data-category');
+        const matchesText = !q || text.includes(q);
+        const matchesCat = !selectedCat || selectedCat === catId;
+        opt.hidden = !(matchesText && matchesCat);
+      });
+      foodSelect.value = '';
+      foodPreview.classList.remove('show');
     });
   </script>
 </body>
