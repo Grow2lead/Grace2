@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     DashboardView, NutritionView, ActivityView, 
     LogMealView, LogActivityView, MealsProviderView, ChallengeHubView, CommunityCornersView, ProfileView,
-    api_log_meal, api_log_activity, LoginView
+    api_log_meal, api_log_activity, LoginView, BookExpertView
 )
 from .fitness_views import FitnessCentersView, FitnessCenterDetailView
 
@@ -24,5 +24,6 @@ urlpatterns = [
     # Fitness Centers
     path('fitness-centers/', FitnessCentersView.as_view(), name='fitness_centers'),
     path('fitness-centers/<int:center_id>/', FitnessCenterDetailView.as_view(), name='fitness_center_detail'),
+    path('book-expert/', BookExpertView.as_view(), name='book_expert'),
 ]
 

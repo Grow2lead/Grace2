@@ -10,3 +10,5 @@ urlpatterns = [
     path('filters/', views.search_filters, name='search-filters'),
 ]
 
+
+

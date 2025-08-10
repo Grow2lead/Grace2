@@ -18,3 +18,5 @@ urlpatterns = [
     # path('<uuid:booking_id>/confirm/', views.confirm_booking, name='confirm-booking'),
 ]
 
+
+

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Log Meal - Health App</title>
+  <title>Log Meal - RootedWell</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -11,12 +11,7 @@
       background: #f8fafc; 
       color: #1e293b;
     }
-    .navbar {
-      background: #0ea5e9; 
-      color: #fff; 
-      padding: 16px 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+    /* legacy navbar styles removed; using shared navbar */
     .navbar-content {
       max-width: 1200px; 
       margin: 0 auto; 
@@ -130,20 +125,7 @@
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="navbar-content">
-      <h1>Log Meal</h1>
-      <div class="nav-links">
-        <a href="{% url 'dashboard' %}">Dashboard</a>
-        <a href="{% url 'nutrition' %}">Nutrition</a>
-        <a href="{% url 'activity' %}">Activity</a>
-        <a href="{% url 'meals_provider' %}">Meals Provider</a>
-        <a href="{% url 'fitness_centers' %}">Fitness Centers</a>
-        <a href="/admin/" target="_blank">Admin</a>
-        <a href="/admin/logout/">Logout</a>
-      </div>
-    </div>
-  </nav>
+  {% include 'web/_navbar.html' with active='nutrition' %}
 
   <div class="container">
     <div class="form-card">

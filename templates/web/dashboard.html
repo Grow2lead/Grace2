@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Health App - Dashboard</title>
+  <title>RootedWell - Dashboard</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -11,12 +11,7 @@
       background: #f8fafc; 
       color: #1e293b;
     }
-    .navbar {
-      background: #0ea5e9; 
-      color: #fff; 
-      padding: 16px 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+    /* legacy navbar styles no longer used: header now from _navbar.html */
     .navbar-content {
       max-width: 1200px; 
       margin: 0 auto; 
@@ -120,105 +115,123 @@
       font-size: 0.9rem;
     }
     .logout-btn:hover { background: #dc2626; }
+    /* Hero banner with beautiful image */
+    .hero-banner {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      min-height: 200px;
+      background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1400&q=80');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    }
+    .hero-content { color: #fff; padding: 32px; }
+    .hero-content h2 { font-size: 1.75rem; margin-bottom: 8px; font-weight: 700; }
+    .hero-content p { opacity: 0.95; }
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="navbar-content">
-      <h1>Health App</h1>
-      <div class="nav-links">
-        <a href="{% url 'dashboard' %}">Dashboard</a>
-        <a href="{% url 'nutrition' %}">Nutrition</a>
-        <a href="{% url 'activity' %}">Activity</a>
-        <a href="{% url 'meals_provider' %}">Meals Provider</a>
-        <a href="{% url 'fitness_centers' %}">Fitness Centers</a>
-        <a href="{% url 'challenge_hub' %}">Challenge Hub</a>
-        <a href="{% url 'community_corner' %}">Community Corner</a>
-        <a href="{% url 'profile' %}">Profile</a>
-        <a href="/admin/" target="_blank">Admin</a>
-        <a href="/admin/logout/" class="logout-btn">Logout</a>
-      </div>
-    </div>
-  </nav>
+  {% include 'web/_navbar.html' with active='dashboard' %}
 
   <div class="container">
-    <div class="welcome-section">
-      <h2>Welcome back, {{ request.user.display_name|default:request.user.username }}!</h2>
-      <p>Here's your health summary for today ({{ today|date:"F j, Y" }})</p>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-number">{{ total_calories|floatformat:0 }}</div>
-        <div class="stat-label">Calories Today</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">{{ total_activity_minutes }}</div>
-        <div class="stat-label">Activity Minutes</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">{{ today_meals.count }}</div>
-        <div class="stat-label">Meals Logged</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">{{ today_activities.count }}</div>
-        <div class="stat-label">Activities Logged</div>
+    <div class="hero-banner">
+      <div class="hero-content">
+        <h2>Fuel your day with smarter choices</h2>
+        <p>Track meals, log activities, and discover local wellness providers.</p>
       </div>
     </div>
+    {% if show_intro %}
+      <div class="welcome-section">
+        <h2>Welcome, {{ request.user.display_name|default:request.user.username }}!</h2>
+        <p>Let’s get you started. You can log your first meal or activity, or explore nutrition and fitness options.</p>
+      </div>
+      <div class="quick-actions">
+        <a href="{% url 'log_meal' %}" class="action-btn">➕ Log First Meal</a>
+        <a href="{% url 'log_activity' %}" class="action-btn">🏃 Log First Activity</a>
+        <a href="{% url 'nutrition' %}" class="action-btn">🍽️ Explore Nutrition</a>
+        <a href="{% url 'fitness_centers' %}" class="action-btn">🏋️ Find Fitness Centers</a>
+      </div>
+    {% else %}
+      <div class="welcome-section">
+        <h2>Welcome back, {{ request.user.display_name|default:request.user.username }}!</h2>
+        <p>Here's your health summary for today ({{ today|date:"F j, Y" }})</p>
+      </div>
 
-    <div class="quick-actions">
-      <a href="{% url 'log_meal' %}" class="action-btn">➕ Log Meal</a>
-      <a href="{% url 'log_activity' %}" class="action-btn">🏃 Log Activity</a>
-      <a href="{% url 'nutrition' %}" class="action-btn">🍽️ View Nutrition</a>
-      <a href="{% url 'activity' %}" class="action-btn">📊 View Activity</a>
-    </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">{{ total_calories|floatformat:0 }}</div>
+          <div class="stat-label">Calories Today</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ total_activity_minutes }}</div>
+          <div class="stat-label">Activity Minutes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ today_meals.count }}</div>
+          <div class="stat-label">Meals Logged</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ today_activities.count }}</div>
+          <div class="stat-label">Activities Logged</div>
+        </div>
+      </div>
 
-    <div class="recent-section">
-      <h3>Today's Meals</h3>
-      {% if today_meals %}
-        {% for meal in today_meals %}
-        <div class="recent-item">
-          <div>
-            <strong>{{ meal.food.name }}</strong>
-            <br><small>{{ meal.get_meal_type_display }} • {{ meal.quantity }}x serving</small>
-          </div>
-          <div>
-            <strong>{{ meal.total_calories|floatformat:0 }} cal</strong>
-          </div>
-        </div>
-        {% endfor %}
-      {% else %}
-        <div class="empty-state">
-          <p>No meals logged today</p>
-          <a href="{% url 'log_meal' %}" class="action-btn" style="display: inline-block; margin-top: 12px;">Log your first meal</a>
-        </div>
-      {% endif %}
-    </div>
+      <div class="quick-actions">
+        <a href="{% url 'log_meal' %}" class="action-btn">➕ Log Meal</a>
+        <a href="{% url 'log_activity' %}" class="action-btn">🏃 Log Activity</a>
+        <a href="{% url 'nutrition' %}" class="action-btn">🍽️ View Nutrition</a>
+        <a href="{% url 'activity' %}" class="action-btn">📊 View Activity</a>
+      </div>
 
-    <div class="recent-section">
-      <h3>Today's Activities</h3>
-      {% if today_activities %}
-        {% for activity in today_activities %}
-        <div class="recent-item">
-          <div>
-            <strong>{{ activity.get_activity_type_display }}</strong>
-            <br><small>{{ activity.started_at|date:"g:i A" }}</small>
+      <div class="recent-section">
+        <h3>Today's Meals</h3>
+        {% if today_meals %}
+          {% for meal in today_meals %}
+          <div class="recent-item">
+            <div>
+              <strong>{{ meal.food.name }}</strong>
+              <br><small>{{ meal.get_meal_type_display }} • {{ meal.quantity }}x serving</small>
+            </div>
+            <div>
+              <strong>{{ meal.total_calories|floatformat:0 }} cal</strong>
+            </div>
           </div>
-          <div>
-            <strong>{{ activity.duration_minutes }} min</strong>
-            {% if activity.calories_burned %}
-              <br><small>{{ activity.calories_burned }} cal burned</small>
-            {% endif %}
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <p>No meals logged today</p>
+            <a href="{% url 'log_meal' %}" class="action-btn" style="display: inline-block; margin-top: 12px;">Log your first meal</a>
           </div>
-        </div>
-        {% endfor %}
-      {% else %}
-        <div class="empty-state">
-          <p>No activities logged today</p>
-          <a href="{% url 'log_activity' %}" class="action-btn" style="display: inline-block; margin-top: 12px;">Log your first activity</a>
-        </div>
-      {% endif %}
-    </div>
+        {% endif %}
+      </div>
+
+      <div class="recent-section">
+        <h3>Today's Activities</h3>
+        {% if today_activities %}
+          {% for activity in today_activities %}
+          <div class="recent-item">
+            <div>
+              <strong>{{ activity.get_activity_type_display }}</strong>
+              <br><small>{{ activity.started_at|date:"g:i A" }}</small>
+            </div>
+            <div>
+              <strong>{{ activity.duration_minutes }} min</strong>
+              {% if activity.calories_burned %}
+                <br><small>{{ activity.calories_burned }} cal burned</small>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <p>No activities logged today</p>
+            <a href="{% url 'log_activity' %}" class="action-btn" style="display: inline-block; margin-top: 12px;">Log your first activity</a>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
   </div>
 </body>
 </html>

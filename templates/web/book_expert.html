@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Trainer/Nutritionist - RootedWell</title>
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-dark: #047857;
+      --text: #0f172a;
+      --muted: #64748b;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); }
+    .header { background: var(--card); border-bottom: 1px solid var(--border); }
+    .navbar { max-width: 1200px; margin: 0 auto; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--muted); margin-left: .75rem; padding: .5rem .75rem; border-radius: .5rem; }
+    .nav-links a:hover { background: #ecfeff; color: #0ea5e9; }
+
+    .hero { position: relative; border-radius: 1rem; overflow: hidden; margin: 1.5rem auto; max-width: 1200px; min-height: 260px; box-shadow: 0 10px 20px rgba(0,0,0,.08);
+      background-image: linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.35)), url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1400&q=80');
+      background-size: cover; background-position: center; color: #fff; display: flex; align-items: flex-end; }
+    .hero .content { padding: 1.75rem; }
+    .hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: .25rem; }
+    .hero p { opacity: .95; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem 2rem; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.25rem; }
+    .card h3 { font-size: 1.25rem; margin-bottom: .75rem; }
+    .muted { color: var(--muted); }
+    .field { margin-bottom: .75rem; }
+    .label { display: block; font-weight: 600; margin-bottom: .25rem; }
+    .input, .select { width: 100%; padding: .75rem; border: 1px solid var(--border); border-radius: .5rem; background: #fff; }
+    .btn { background: var(--primary); color: #fff; border: none; padding: .75rem 1rem; border-radius: .5rem; cursor: pointer; font-weight: 600; }
+    .btn:hover { background: var(--primary-dark); }
+
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  {% include 'web/_navbar.html' with active='book_expert' %}
+
+  <section class="hero">
+    <div class="content">
+      <h1>Book a Trainer/Nutritionist</h1>
+      <p>Schedule a one-on-one session with certified experts for personalized advice.</p>
+    </div>
+  </section>
+
+  <main class="container">
+    <div class="grid">
+      <div class="card">
+        <h3>Find an Expert</h3>
+        <p class="muted" style="margin-bottom:.75rem">Filter by expertise, location, and availability.</p>
+        <form method="get" action="/api/search/">
+          <div class="field">
+            <label class="label">Expertise</label>
+            <select class="select" name="category">
+              <option value="personal_trainer">Personal Trainer</option>
+              <option value="nutritionist">Nutritionist</option>
+              <option value="dietitian">Dietitian</option>
+              <option value="yoga">Yoga Instructor</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label">District</label>
+            <input class="input" name="district" placeholder="e.g., Colombo" />
+          </div>
+          <div class="field">
+            <label class="label">Preferred Date</label>
+            <input type="date" class="input" name="date" />
+          </div>
+          <button type="submit" class="btn">Search Experts</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Quick Booking</h3>
+        <p class="muted" style="margin-bottom:.75rem">Know who you want? Book directly.</p>
+        <form method="post" action="/api/bookings/create/">
+          {% csrf_token %}
+          <div class="field">
+            <label class="label">Provider ID</label>
+            <input class="input" name="provider" placeholder="Enter provider ID" required />
+          </div>
+          <div class="field">
+            <label class="label">Service ID</label>
+            <input class="input" name="service" placeholder="Enter service ID" required />
+          </div>
+          <div class="field"><label class="label">Date</label><input type="date" class="input" name="booking_date" required /></div>
+          <div class="field"><label class="label">Time</label><input type="time" class="input" name="booking_time" required /></div>
+          <div class="field"><label class="label">Participants</label><input type="number" class="input" name="participants" value="1" min="1" /></div>
+          <button type="submit" class="btn">Create Booking</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.25rem">
+      <h3>How it works</h3>
+      <ol style="margin-top:.75rem; color: var(--muted); padding-left: 1rem; line-height:1.8">
+        <li>Search experts by category and location</li>
+        <li>Check availability for your preferred time</li>
+        <li>Book, pay securely, and get confirmation</li>
+      </ol>
+    </div>
+  </main>
+</body>
+</html>
+
+

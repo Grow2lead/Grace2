@@ -6,9 +6,9 @@
   <title>Fitness Centers - Rootedwell</title>
   <style>
     :root {
-      --primary-color: #059669;
-      --primary-dark: #047857;
-      --secondary-color: #0ea5e9;
+      --primary-color: #22c55e;
+      --primary-dark: #16a34a;
+      --secondary-color: #38bdf8;
       --accent-color: #f59e0b;
       --success-color: #10b981;
       --warning-color: #f59e0b;
@@ -482,29 +482,17 @@
       margin-bottom: 2rem;
     }
   </style>
+  <style>
+    .hero-section {
+      background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('https://images.unsplash.com/photo-1558611848-73f7eb4001a1?auto=format&fit=crop&w=1400&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+    .hero-section h1, .hero-section p { color: #fff; }
+  </style>
 </head>
 <body>
-  <header class="header">
-    <nav class="navbar">
-      <a href="{% url 'dashboard' %}" class="brand">
-        <div class="brand-icon">🌿</div>
-        <span>Rootedwell</span>
-      </a>
-      <div class="nav-links" id="navLinks">
-        <a href="{% url 'dashboard' %}">Dashboard</a>
-        <a href="{% url 'nutrition' %}">Nutrition</a>
-        <a href="{% url 'activity' %}">Activity</a>
-        <a href="{% url 'meals_provider' %}">Meals Provider</a>
-        <a href="{% url 'fitness_centers' %}" class="active">Fitness Centers</a>
-        <a href="{% url 'challenge_hub' %}">Challenge Hub</a>
-        <a href="{% url 'community_corner' %}">Community Corner</a>
-        <a href="{% url 'profile' %}">Profile</a>
-        <a href="/admin/" target="_blank">Admin</a>
-        <a href="/admin/logout/" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">Logout</a>
-      </div>
-      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-    </nav>
-  </header>
+  {% include 'web/_navbar.html' with active='fitness_centers' %}
 
   <div class="hero-section">
     <div class="hero-content">

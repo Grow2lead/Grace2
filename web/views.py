@@ -75,6 +75,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         for meal in today_meals:
             meal.total_calories = meal.food.calories * meal.quantity
         
+        # Determine if we should show a simplified intro (no data yet today)
+        has_meals_today = today_meals.exists()
+        has_activities_today = today_activities.exists()
+        show_intro = not has_meals_today and not has_activities_today
+
         context.update({
             'today_meals': today_meals,
             'today_activities': today_activities,
@@ -91,6 +96,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             'sri_lankan_foods': sri_lankan_foods,
             'total_providers': total_providers,
             'available_services': available_services,
+            'show_intro': show_intro,
         })
         return context
 
@@ -623,4 +629,8 @@ def api_log_activity(request):
         })
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+class BookExpertView(LoginRequiredMixin, TemplateView):
+    template_name = 'web/book_expert.html'
 

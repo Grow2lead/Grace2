@@ -92,3 +92,5 @@ class FitnessCenterDetailView(LoginRequiredMixin, TemplateView):
             
         return context
 
+
+

@@ -17,3 +17,5 @@ urlpatterns = [
     path('recommendations/accept/', views.accept_recommendation, name='recommendation-accept'),
 ]
 
+
+
